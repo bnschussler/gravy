@@ -1,68 +1,108 @@
 float[][] pos;
 float[][] vel;
 float[]   acc;
-float[] mass;
-int n=10;
-float t=1;
+float[]  mass;
+int      n=100; //number of objects
+float    dt=1; //timestep
+int     dim=3; //dimensions
+float   e=20; //softening radius
 
-int i;
+int i;  //some looping constants because you can't iterate through an array...
 int j;
 int k;
 float d;
+float dsq;
+float[] out; //temp variable
+
+float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
+  out=new float[3];
+  out[0]=2;
+  while(dist(0,0,0,out[0],out[1],out[2])>1){
+    out[0]=random(-1,1);
+    out[1]=random(-1,1);
+    out[2]=random(-1,1);
+  }
+  out[0]=out[0]*r+center[0];
+  out[1]=out[1]*r+center[1];
+  out[2]=out[2]*r+center[2];
+  return out;
+}
+
+float[] m;
+float totalmass;
 
 void setup(){
   size(800,800,P3D);
-  
   noFill();
-  pos=new float[n][3];
-  vel=new float[n][3];
-  acc=new float[3];
+  pos=new float[n][dim];
+  vel=new float[n][dim];
+  acc=new float[dim];
   mass=new float[n];
+  m=new float[dim];
+  float[] c = {400,400,400};
   for (i=0; i<n; i++){
-    pos[i][0]=random(width);
-    pos[i][1]=random(height);
-    pos[i][2]=random(-800,0);
-    mass[i]=random(200,1000);
-    for (j=0; j<3; j++){
-      vel[i][j]=random(-5,5);
+    pos[i]=random_point_in_sphere(c,400);
+    mass[i]=random(100,200);
+    for (k=0; k<dim; k++){
+      vel[i][k]=random(-4,4);
+    }
+  }
+  
+  //remove net momentum
+  for (i=0; i<n; i++){
+    totalmass+=mass[i];
+    for (k=0; k<dim; k++){
+      m[k]+=mass[i]*vel[i][k];
+    }
+  }
+  for (i=0; i<n; i++){
+    for (k=0; k<dim; k++){
+      vel[i][k]-=m[k]/totalmass;
     }
   }
 }
 
 void draw(){
-  background(129);
-  pushMatrix();
   
+  background(129);
+  pushMatrix();  //3D rotation stuff (i'm really glad I wrote this back in 2019 so I don't have to deal with it now)
   translate(400,400,-400);
   rotateY(mouseX*2*PI/width);
   rotateX(mouseY*2*PI/height);
   box(800);
   popMatrix();
+  
+  for (i=0; i<n; i++){
+    for (k=0; k<dim; k++){
+      pos[i][k]+=dt/2*vel[i][k];
+    }
+  }
   for (i=0; i<n; i++){
     for (j=0; j<n; j++){
-      d=dist(pos[i][0],pos[i][1],pos[i][2],pos[j][0],pos[j][1],pos[j][2]);
+      dsq=0;
+      for (k=0; k<dim; k++){
+        dsq+=pow(pos[i][k]-pos[j][k],2);
+      }
+      dsq+=pow(e,2); //softening; not ideal, but a good quick fix
       if (i!=j){
-        for (k=0; k<3; k++){
-          acc[k]-=mass[j]*(pos[i][k]-pos[j][k])/pow(d,3);
+        for (k=0; k<dim; k++){
+          acc[k]-=mass[j]*(pos[i][k]-pos[j][k])/pow(dsq,dim/2.);
         }
       }
     }
-    for (k=0; k<3; k++){
-      vel[i][k]+=t*acc[k];
-      if (abs(vel[i][k])>10){
-        vel[i][k]*=.99;
-      }
+    for (k=0; k<dim; k++){
+      vel[i][k]+=dt*acc[k];
       acc[k]=0;
     }
   }
   for (i=0; i<n; i++){
-    for (k=0; k<3; k++){
-      pos[i][k]+=t*vel[i][k];
-      pos[i][k]=((pos[i][k]%800)+800)%800;
+    for (k=0; k<dim; k++){
+      pos[i][k]+=dt/2*vel[i][k];
+      //pos[i][k]=((pos[i][k]%800)+800)%800;
     }
     //pos[i][2]=0;
-    pushMatrix();
     
+    pushMatrix();
     translate(400,400,-400);
     rotateY(mouseX*2*PI/width);
     rotateX(mouseY*2*PI/height);
