@@ -15,7 +15,7 @@ boolean isometric=false;
 
 void setn(){
   draw();
-  pritnln("test");
+  println("test");
 }
 
 float[][] pos;
