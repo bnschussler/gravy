@@ -69,6 +69,7 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
 
 void setup(){
   stroke(255);
+  strokeWeight(10);
   size(800,800,P3D);
   pos=new float[n][dim];
   pos1=new float[n][dim];
@@ -89,7 +90,6 @@ void setup(){
 }
 
 void draw(){
-  println(pos[0][0]);
   background(0);
   //println(millis()-time);
   time=millis();
