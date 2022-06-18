@@ -64,12 +64,12 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
   temp=x/z;
   temp1=y/z;
   project(rx,ry,x2,y2,z2);
-  stroke(255,255,255);
+  //stroke(255,255,255);
   line(temp+width/2,temp1+height/2,x/z+width/2,y/z+height/2);
 }
 
 void setup(){
-  stroke(255);
+  stroke(255,255,255);
   size(800,800,P3D);
   pos=new float[n][dim];
   pos1=new float[n][dim];
@@ -90,7 +90,7 @@ void setup(){
 }
 
 void draw(){
-  background(128);
+  background(0);
   //println(millis()-time);
   time=millis();
   
@@ -115,7 +115,7 @@ void draw(){
     line3(rx,ry,0,0,0,0,100,0);
     stroke(0,0,255);
     line3(rx,ry,0,0,0,0,0,100);
-    stroke(255);
+    stroke(255,255,255);
   }
   
   
