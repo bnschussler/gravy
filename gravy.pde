@@ -106,7 +106,7 @@ void draw(){
     rotateX(mouseY*2*PI/height);
     box(800);
     popMatrix();
-  }
+  }*/
   //axes
   if(showaxes){
     stroke(255,0,0);
@@ -117,7 +117,7 @@ void draw(){
     line3(rx,ry,0,0,0,0,0,100);
     stroke(255);
   }
-  */
+  
   
   center[0]=0;
   center[1]=0;
