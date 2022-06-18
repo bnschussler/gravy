@@ -14,7 +14,7 @@ boolean showaxes=false;
 boolean isometric=false;
 
 void setn(){
-  println("test");
+  println(pos[0][0]);
 }
 
 float[][] pos;
