@@ -4,11 +4,10 @@
 		<script type="text/javascript" src="processing.js"></script>
 	</head>
 	<body>
-		<canvas data-processing-sources="gravy.pde"></canvas>
+		<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
 		<script>
-			alert(n);
-			n=10;
-			alert(n);
+			var pjs = Processing.getInstanceById(sketch);
+			pjs.setn();
 		</script>
 	</body>
 </html>
