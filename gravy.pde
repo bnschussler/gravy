@@ -90,7 +90,7 @@ void setup(){
 }
 
 void draw(){
-  background(0);
+  background(128);
   //println(millis()-time);
   time=millis();
   
