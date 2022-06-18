@@ -64,10 +64,11 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
   temp=x/z;
   temp1=y/z;
   project(rx,ry,x2,y2,z2);
-  quad(temp+width/2,temp1+height/2,temp+width/2,temp1+height/2,x/z+width/2,y/z+height/2,x/z+width/2,y/z+height/2);
+  line(temp+width/2,temp1+height/2,x/z+width/2,y/z+height/2);
 }
 
 void setup(){
+  strokeWidth(5);
   stroke(255);
   size(800,800,P3D);
   pos=new float[n][dim];
