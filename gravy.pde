@@ -97,7 +97,7 @@ void draw(){
   rx=mouseX*2*PI/width;
   ry=mouseY*2*PI/height;
   
-  /*
+  
   //box
   if(showbox){
     pushMatrix();  //3D rotation stuff (i'm really glad I wrote this back in 2019 so I don't have to deal with it now)
@@ -106,7 +106,7 @@ void draw(){
     rotateX(mouseY*2*PI/height);
     box(800);
     popMatrix();
-  }*/
+  }
   //axes
   if(showaxes){
     stroke(255,0,0);
