@@ -97,15 +97,15 @@ void draw(){
   rx=mouseX*2*PI/width;
   ry=mouseY*2*PI/height;
   
-  
   //box
   if(showbox){
-    pushMatrix();  //3D rotation stuff (i'm really glad I wrote this back in 2019 so I don't have to deal with it now)
-    translate(400,400,-400);
-    rotateY(mouseX*2*PI/width);
-    rotateX(mouseY*2*PI/height);
-    box(800);
-    popMatrix();
+    for(i=-1;i<=1;i+=2){
+      for(j=-1;j<=1;j+=2){
+        line3(rx,ry,box*i,box*j,box,box*i,box*j,-box);
+        line3(rx,ry,box*i,box,box*j,box*i,-box,box*j);
+        line3(rx,ry,box,box*i,box*j,-box,box*i,box*j);
+      }
+    }
   }
   //axes
   if(showaxes){
