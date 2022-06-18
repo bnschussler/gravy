@@ -69,7 +69,6 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
 
 void setup(){
   stroke(255);
-  strokeWeight(10);
   size(800,800,P3D);
   pos=new float[n][dim];
   pos1=new float[n][dim];
@@ -167,9 +166,8 @@ void draw(){
     //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
     project(rx,ry,pos[i][0],pos[i][1],pos[i][2]);
-    if(z>0) ellipse(x/z+width/2,
+    if(z>0) circle(x/z+width/2,
                    y/z+height/2,
-                   s*2*mass[i]/(40*z),
                    s*2*mass[i]/(40*z));
   }
 }
