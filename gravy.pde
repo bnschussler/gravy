@@ -172,4 +172,5 @@ void draw(){
                    s*2*mass[i]/(40*z),
                    s*2*mass[i]/(40*z));
   }
+  text("test",10,50);
 }
