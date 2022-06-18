@@ -69,7 +69,7 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
 
 void setup(){
   stroke(255);
-  size(800,800);
+  size(800,800,P3D);
   pos=new float[n][dim];
   pos1=new float[n][dim];
   vel=new float[dim];
@@ -98,13 +98,12 @@ void draw(){
   
   //box
   if(showbox){
-    for(i=-1;i<=1;i+=2){
-      for(j=-1;j<=1;j+=2){
-        line3(rx,ry,box*i,box*j,box,box*i,box*j,-box);
-        line3(rx,ry,box*i,box,box*j,box*i,-box,box*j);
-        line3(rx,ry,box,box*i,box*j,-box,box*i,box*j);
-      }
-    }
+    pushMatrix();  //3D rotation stuff (i'm really glad I wrote this back in 2019 so I don't have to deal with it now)
+    translate(400,400,-400);
+    rotateY(mouseX*2*PI/width);
+    rotateX(mouseY*2*PI/height);
+    box(800);
+    popMatrix();
   }
   //axes
   if(showaxes){
