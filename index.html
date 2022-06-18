@@ -2,8 +2,16 @@
 <html>
 	<head>
 		<script type="text/javascript" src="processing.js"></script>
+		<script type="text/javascript">
+			function updateSettings(id) {
+				var pjs = Processing.getInstanceById(id);
+				var n = document.getElementById('n').value;
+				pjs.updateSettings(n); }
+		</script>
 	</head>
 	<body>
-		<canvas data-processing-sources="gravy.pde"></canvas>
+		<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
+		<input type="textfield" value="200" id="n"/>
+		<button onclick="updatesettings('sketch')"/>
 	</body>
 </html>
