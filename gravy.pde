@@ -97,6 +97,7 @@ void draw(){
   rx=mouseX*2*PI/width;
   ry=mouseY*2*PI/height;
   
+  /*
   //box
   if(showbox){
     pushMatrix();  //3D rotation stuff (i'm really glad I wrote this back in 2019 so I don't have to deal with it now)
@@ -116,6 +117,7 @@ void draw(){
     line3(rx,ry,0,0,0,0,0,100);
     stroke(255);
   }
+  */
   
   center[0]=0;
   center[1]=0;
@@ -165,8 +167,9 @@ void draw(){
     //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
     project(rx,ry,pos[i][0],pos[i][1],pos[i][2]);
-    /*if(z>0) circle(x/z+width/2,
+    if(z>0) ellipse(x/z+width/2,
                    y/z+height/2,
-                   s*2*mass[i]/(40*z));*/
+                   s*2*mass[i]/(40*z),
+                   s*2*mass[i]/(40*z));
   }
 }
