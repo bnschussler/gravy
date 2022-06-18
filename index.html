@@ -2,12 +2,15 @@
 <html>
 	<head>
 		<script type="text/javascript" src="processing.js"></script>
+		<script type="text/javascript">
+			function updateSettings(id) { //help from http://processingjs.nihongoresources.com/processing%20on%20the%20web/#interface
+				var pjs = Processing.getInstanceById(id);
+				pjs.setn(); 
+			}
+		</script>
 	</head>
 	<body>
 		<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
-		<script>
-			var pjs = Processing.getInstanceById(sketch);
-			pjs.setn();
-		</script>
+		<button id="testbutton" value="test" onclick="updateSettings('sketch')"/>
 	</body>
 </html>
