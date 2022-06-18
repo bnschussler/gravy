@@ -39,6 +39,10 @@ float x;
 float y;
 float z;
 
+void updateSettings(int q){
+  n=q;
+}
+
 float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
   out=new float[3];
   out[0]=2;
