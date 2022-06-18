@@ -13,11 +13,6 @@ boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
 
-void setn(){
-  draw();
-  println("test");
-}
-
 float[][] pos;
 float[] vel;
 float[][] pos1;
