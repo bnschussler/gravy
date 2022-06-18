@@ -14,7 +14,7 @@ boolean showaxes=false;
 boolean isometric=false;
 
 void setn(){
-  n=10;
+  println("test");
 }
 
 float[][] pos;
@@ -94,7 +94,7 @@ void setup(){
 
 void draw(){
   background(0);
-  println(millis()-time);
+  //println(millis()-time);
   time=millis();
   
   rx=mouseX*2*PI/width;
