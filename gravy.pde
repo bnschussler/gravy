@@ -1,5 +1,6 @@
 boolean test=false;
 
+int     nmax=1600;
 int      n=test?2:200; //number of objects
 int     dark=100; //how many objects have no collision
 float    dt=0.25; //timestep
@@ -85,11 +86,11 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
 void setup(){
   stroke(255,255,255);
   size(800,800);
-  pos=new float[n][dim];
-  pos1=new float[n][dim];
+  pos=new float[nmax][dim];
+  pos1=new float[nmax][dim];
   vel=new float[dim];
-  acc=new float[n][dim];
-  mass=new float[n];
+  acc=new float[nmax][dim];
+  mass=new float[nmax];
   center=new float[dim];
   float[] c = {0,0,0};
   for (i=0; i<n; i++){
