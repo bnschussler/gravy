@@ -39,8 +39,18 @@ float x;
 float y;
 float z;
 
-void updateSettings(int q){
-  n=q;
+void updateSettings(int n1,float t1,float dark1,float size,float startvel,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1){
+  n=n1;
+  dt=t1;
+  dark=floor(n*dark1);
+  s=size;
+  c=size;
+  initalvelocities=startvel;
+  box=boxsize;
+  showbox=showbox1;
+  showaxes=showaxes1;
+  boundary=boundary1;
+  isometric=isometric1;
 }
 
 float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
@@ -74,7 +84,7 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
 
 void setup(){
   stroke(255,255,255);
-  size(800,800,P3D);
+  size(800,800);
   pos=new float[n][dim];
   pos1=new float[n][dim];
   vel=new float[dim];
