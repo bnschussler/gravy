@@ -1,44 +1,74 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<style>
+			.col{
+				float:  left;
+				width:  200px;
+				padding:  10px;
+			}
+
+			.col p{
+				padding-top: 50px;
+			}
+
+		</style>
 		<script type="text/javascript" src="processing.js"></script>
+			
 	</head>
 	<body>
-		<p id="ntext">200</p>
-		<input type="range" value="200" id="nslider" onchange="updateSettings('sketch')" min="0" max="1600" />
-		
-		<p id="ttext">x.25</p>
-		<input type="range" value=".25" id="tslider" onchange="updateSettings('sketch')" min="0" max="2" />
-		
-		<p id="darktext">50%</p>
-		<input type="range" value="50" id="darkslider" onchange="updateSettings('sketch')" min="0" max="100" />
-		
-		<p id="sizetext">x1</p>
-		<input type="range" value="1" id="sizeslider" onchange="updateSettings('sketch')" min="0" max="10" />
+		<div>
+			<div class="col">
+				
+				<p id="ttext">x.25</p>
+				<input type="range" value=".25" id="tslider" onchange="updateSettings('sketch')" min="0" max="2" />
+				
+				<p id="ntext">200</p>
+				<input type="range" value="200" id="nslider" onchange="updateSettings('sketch')" min="0" max="1600" />
 
-		<p id="startveltext">6</p>
-		<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
+				<p id="darktext">50%</p>
+				<input type="range" value="50" id="darkslider" onchange="updateSettings('sketch')" min="0" max="100" />
 
-		<p id="startveltext">6</p>
-		<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
+				<p>Advanced</p>
+				<input type="checkbox" onchange="updateVisibility(this.checked,'advanced')"/>
+			</div>
+			<div class="col" id="advanced" style="display: none">
+				<p id="sizetext">x1</p>
+				<input type="range" value="1" id="sizeslider" onchange="updateSettings('sketch')" min="0" max="10" />
 
-		<p id="boxtext">400</p>
-		<input type="range" value="400" id="boxslider" onchange="updateSettings('sketch')" min="0" max="400" />
+				<p id="boxtext">400</p>
+				<input type="range" value="400" id="boxslider" onchange="updateSettings('sketch')" min="0" max="400" />
 
-		<p>box</p>
-		<input type="checkbox" id="box" onchange="updateSettings('sketch')"/>
-		<p>axes</p>
-		<input type="checkbox" id="axes" onchange="updateSettings('sketch')"/>
-		<p>bound</p>
-		<input type="checkbox" id="bound" onchange="updateSettings('sketch')"/>
-		<p>isometric</p>
-		<input type="checkbox" id="isometric" onchange="updateSettings('sketch')"/>
+				<p id="startveltext">6</p>
+				<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
 
-		<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
+				<p id="startveltext">6</p>
+				<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
+			</div>
+			<div class="col">
+				<p>box</p>
+				<input type="checkbox" id="box" onchange="updateSettings('sketch')"/>
+				<p>axes</p>
+				<input type="checkbox" id="axes" onchange="updateSettings('sketch')"/>
+				<p>bound</p>
+				<input type="checkbox" id="bound" onchange="updateSettings('sketch')"/>
+				<p>isometric</p>
+				<input type="checkbox" id="isometric" onchange="updateSettings('sketch')"/>
+			</div>
+			<div class="col">
+				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
+			</div>
+		</div>
+		<script>
+			function updateVisibility(show,id){
+				var obj=document.getElementById(id);
+				obj.style.display=show?"initial":"none";
 
-		<script type="text/javascript">
+			}
+
 			function updateSettings(id) {	//help from http://processingjs.nihongoresources.com/processing%20on%20the%20web/#interface
 				var pjs = Processing.getInstanceById(id);
+
 				var n = document.getElementById('nslider').value;
 				var t = document.getElementById('tslider').value;
 				var dark=document.getElementById('darkslider').value;
