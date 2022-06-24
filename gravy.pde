@@ -2,7 +2,7 @@ boolean test=false;
 
 int     nmax=1600;
 int      n=test?2:200; //number of objects
-int     dark=100; //how many objects have no collision
+int     dark=0; //how many objects have no collision
 float    dt=0.25; //timestep
 float   s=1; //visual size multiplier
 float   c=1; //collision size multiplier
@@ -13,6 +13,7 @@ float   initialspheresize=400;
 boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
+boolean showW=true;
 
 float[][] pos;
 float[] vel;
@@ -20,6 +21,7 @@ float[][] pos1;
 float[][] acc;
 float[]  mass;
 float[] center; //center of mass
+float[] w; //angular momentum
 float totalmass;
 int     dim=3; //dimensions
 float   e=20; //softening radius
@@ -52,6 +54,7 @@ void updateSettings(int n1,float t1,float dark1,float size,float startvel,float 
   showaxes=showaxes1;
   boundary=boundary1;
   isometric=isometric1;
+  println(n,dt,dark,s,c,initalvelocities,box,showbox,showaxes,boundary,isometric);
 }
 
 float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
@@ -79,7 +82,7 @@ void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float 
   temp=x/z;
   temp1=y/z;
   project(rx,ry,x2,y2,z2);
-  stroke(255,255,255);
+  //stroke(255,255,255);
   line(temp+width/2,temp1+height/2,x/z+width/2,y/z+height/2);
 }
 
@@ -92,6 +95,7 @@ void setup(){
   acc=new float[nmax][dim];
   mass=new float[nmax];
   center=new float[dim];
+  w=new float [dim];
   float[] c = {0,0,0};
   for (i=0; i<n; i++){
     pos[i]=random_point_in_sphere(c,test?40:initialspheresize);
@@ -137,12 +141,20 @@ void draw(){
   center[0]=0;
   center[1]=0;
   center[2]=0;
+  w[0]=0;
+  w[1]=0;
+  w[2]=0;
   for (i=0; i<n; i++){
     for (k=0; k<dim; k++){
       center[k]+=constrain(pos[i][k],-800,800)*mass[i]/totalmass;//we constrain so free particles don't skew the average
+      w[k]+=pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]);
     }
   }
   //printArray(center);
+  if(showW){
+    stroke(255,0,255);
+    line3(rx,ry,0,0,0,w[0]/n,w[1]/n,w[2]/n);
+  }
   
   for (i=0; i<n; i++){
     for (j=i+1; j<n; j++){
@@ -182,6 +194,7 @@ void draw(){
     //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
     project(rx,ry,pos[i][0],pos[i][1],pos[i][2]);
+    stroke(255);
     if(z>0) ellipse(x/z+width/2,
                    y/z+height/2,
                    s*2*mass[i]/(40*z),
