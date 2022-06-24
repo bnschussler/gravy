@@ -97,7 +97,7 @@ void setup(){
   center=new float[dim];
   w=new float [dim];
   float[] c = {0,0,0};
-  for (i=0; i<n; i++){
+  for (i=0; i<nmax; i++){
     pos[i]=random_point_in_sphere(c,test?40:initialspheresize);
     mass[i]=random(100,200);
     totalmass+=mass[i];
