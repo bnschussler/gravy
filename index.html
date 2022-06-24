@@ -8,9 +8,23 @@
 				padding:  10px;
 			}
 
-			.col p{
-				padding-top: 50px;
+			.break{
+				margin-top: 50px;
 			}
+
+			p{
+				margin: 0px;
+			}
+
+			p.nobr{
+				display: inline;
+			}
+
+			.small{
+				width: 4ch;
+			}
+
+
 
 		</style>
 		<script type="text/javascript" src="processing.js"></script>
@@ -20,66 +34,44 @@
 		<div>
 			<div class="col">
 				
-				<p id="ttext">x.25</p>
-				<input type="range" value=".25" id="tslider" onchange="updateSettings('sketch')" min="0" max="2" />
-				
-				<p id="ntext">200</p>
-				<input type="range" value="200" id="nslider" onchange="updateSettings('sketch')" min="0" max="1600" />
-
-				<p id="darktext">50%</p>
-				<input type="range" value="50" id="darkslider" onchange="updateSettings('sketch')" min="0" max="100" />
-
-				<p>Advanced</p>
+				<p class="nobr">speed:</p>
+				<input type="text" id="ttext" value="5" class="small"/>
+				<input type="range" value="5" id="tslider" min="0" max="40"/>
+				<br><p class="nobr"># of particles:</p>
+				<input type="text" id="ntext" value="200" class="break small" />
+				<input type="range" value="200" id="nslider" min="0" max="1600" />
+				<br><p class="nobr">% dark matter:</p>
+				<input type="text" id="darktext" value="50" class="break small"/>
+				<input type="range" value="50" id="darkslider" min="0" max="100" />
+				<p class="break">Advanced</p>
 				<input type="checkbox" onchange="updateVisibility(this.checked,'advanced')"/>
 			</div>
 			<div class="col" id="advanced" style="display: none">
-				<p id="sizetext">x1</p>
-				<input type="range" value="1" id="sizeslider" onchange="updateSettings('sketch')" min="0" max="10" />
-
-				<p id="boxtext">400</p>
-				<input type="range" value="400" id="boxslider" onchange="updateSettings('sketch')" min="0" max="400" />
-
-				<p id="startveltext">6</p>
-				<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
-
-				<p id="startveltext">6</p>
-				<input type="range" value="6" id="startvelslider" onchange="updateSettings('sketch')" min="0" max="40" />
+				<p class="nobr">particle size:</p>
+				<input type="text" id="sizetext" value="1" class="small"/>
+				<input type="range" value="1" id="sizeslider" min="0" max="10" />
+				<br><p class="nobr">box size:</p>
+				<input type="text" id="boxtext" value="400" class="break small"/>
+				<input type="range" value="400" id="boxslider" min="0" max="400" />
+				<br><p class="nobr">start velocity:</p>
+				<input type="text" id="startveltext" value="6" class="break small"/>
+				<input type="range" value="6" id="startvelslider" min="0" max="40" />
 			</div>
 			<div class="col">
 				<p>box</p>
-				<input type="checkbox" id="box" onchange="updateSettings('sketch')"/>
-				<p>axes</p>
-				<input type="checkbox" id="axes" onchange="updateSettings('sketch')"/>
-				<p>bound</p>
-				<input type="checkbox" id="bound" onchange="updateSettings('sketch')"/>
-				<p>isometric</p>
-				<input type="checkbox" id="isometric" onchange="updateSettings('sketch')"/>
+				<input type="checkbox" id="box"/>
+				<p class="break">axes</p>
+				<input type="checkbox" id="axes"/>
+				<p class="break">bound</p>
+				<input type="checkbox" id="bound"/>
+				<p class="break">isometric</p>
+				<input type="checkbox" id="isometric"/>
 			</div>
 			<div class="col">
 				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
 			</div>
 		</div>
-		<script>
-			function updateVisibility(show,id){
-				var obj=document.getElementById(id);
-				obj.style.display=show?"initial":"none";
+		<script src="inputHandling.js"></script>
 
-			}
-
-			function updateSettings(id) {	//help from http://processingjs.nihongoresources.com/processing%20on%20the%20web/#interface
-				var pjs = Processing.getInstanceById(id);
-
-				var n = document.getElementById('nslider').value;
-				var t = document.getElementById('tslider').value;
-				var dark=document.getElementById('darkslider').value;
-				var size=document.getElementById('sizeslider').value;
-				var startvel=document.getElementById('startvelslider').value;
-				var boxsize=document.getElementById('boxslider').value;
-				var showbox=document.getElementById('box').checked;
-				var showaxes=document.getElementById('axes').checked;
-				var border=document.getElementById('bound').checked;
-				var isometric=document.getElementById('isometric').checked;
-				pjs.updateSettings(n,t,dark,size,startvel,boxsize,showbox,showaxes,border,isometric); }
-		</script>
 	</body>
 </html>
