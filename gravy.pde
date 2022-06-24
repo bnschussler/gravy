@@ -200,7 +200,7 @@ void draw(){
       acc[i][k]=0;
       pos[i][k]-=center[k];//recentering camera
       pos1[i][k]-=center[k];//this always lags behind by a frame, which gives the recentering a smoother look
-      if(boundary) pos[i][k]=constrain(pos[i][k],-box,box);
+      if(boundary) pos[i][k]=max(min(pos[i][k],box),-box);
     }
     //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
