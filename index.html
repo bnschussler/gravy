@@ -40,6 +40,9 @@
 				<br><p class="nobr"># of particles:</p>
 				<input type="text" id="ntext" value="200" class="break small" />
 				<input type="range" value="200" id="nslider" min="0" max="1600" />
+				<br><p class="nobr">gravity strength:</p>
+				<input type="text" id="gtext" value="10" class="break small" />
+				<input type="range" value="10" id="gslider" min="0" max="20" />
 				<br><p class="nobr">% dark matter:</p>
 				<input type="text" id="darktext" value="50" class="break small"/>
 				<input type="range" value="50" id="darkslider" min="0" max="100" />
@@ -56,14 +59,14 @@
 				<br><p class="nobr">start velocity:</p>
 				<input type="text" id="startveltext" value="6" class="break small"/>
 				<input type="range" value="6" id="startvelslider" min="0" max="40" />
-			</div>
-			<div class="col">
-				<p>box</p>
-				<input type="checkbox" id="box"/>
-				<p class="break">axes</p>
+				<br><br><p>show bounding boxbox</p>
+				<input type="checkbox" id="box" value="checked"/>
+				<p class="break">bound particles</p>
+				<input type="checkbox" id="bound" value="checked"/>
+				<p class="break">show axes</p>
 				<input type="checkbox" id="axes"/>
-				<p class="break">bound</p>
-				<input type="checkbox" id="bound"/>
+				<p class="break">show angular momentum</p>
+				<input type="checkbox" id="w"/>
 				<p class="break">isometric</p>
 				<input type="checkbox" id="isometric"/>
 			</div>

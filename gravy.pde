@@ -10,13 +10,20 @@ float   box=400; //box size
 boolean boundary=true;
 float   initalvelocities=6;
 float   initialspheresize=400;
+float   g=1;
 boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
 boolean showW=true;
 
+void keyPressed(){
+  dt=1/dt;
+  vt=dt;
+}
+
 float[][] pos;
 float[] vel;
+float vt=1; //scales down velocities it the timestep is ever changed
 float[][] pos1;
 float[][] acc;
 float[]  mass;
@@ -42,9 +49,11 @@ float x;
 float y;
 float z;
 
-void updateSettings(int n1,float t1,float dark1,float size,float startvel,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1){
+void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
   n=n1;
   dt=t1;
+  vt=t1; //scale down velocities at the end of this frame
+  g=g1;
   dark=floor(n*dark1);
   s=size;
   c=size;
@@ -54,7 +63,8 @@ void updateSettings(int n1,float t1,float dark1,float size,float startvel,float 
   showaxes=showaxes1;
   boundary=boundary1;
   isometric=isometric1;
-  println(n,dt,dark,s,c,initalvelocities,box,showbox,showaxes,boundary,isometric);
+  showW=showW1;
+  //println(n,dt,dark,s,c,initalvelocities,box,showbox,showaxes,boundary,isometric);
 }
 
 float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
@@ -109,6 +119,7 @@ void setup(){
 }
 
 void draw(){
+  println(pos[0][0]);
   background(0);
   //println(millis()-time);
   time=millis();
@@ -175,7 +186,7 @@ void draw(){
       }
       dsq+=pow(e,2); //softening; not ideal, but a good quick fix
       for (k=0; k<dim; k++){
-        temp=mass[j]*(pos[i][k]-pos[j][k])/pow(dsq,dim/2.);
+        temp=g*mass[j]*(pos[i][k]-pos[j][k])/pow(dsq,dim/2.);
         acc[i][k]-=temp;
         acc[j][k]+=temp;
       }
@@ -184,11 +195,11 @@ void draw(){
   for (i=0; i<n; i++){
     for (k=0; k<dim; k++){
       temp=pos[i][k];
-      pos[i][k]=2*pos[i][k]-pos1[i][k]+acc[i][k]*dt*dt;
+      pos[i][k]+=vt*(pos[i][k]-pos1[i][k])+acc[i][k]*dt*dt;
       pos1[i][k]=temp;
       acc[i][k]=0;
       pos[i][k]-=center[k];//recentering camera
-      pos1[i][k]-=center[k];
+      pos1[i][k]-=center[k];//this always lags behind by a frame, which gives the recentering a smoother look
       if(boundary) pos[i][k]=constrain(pos[i][k],-box,box);
     }
     //if(test) pos[i][2]=0;
@@ -200,4 +211,5 @@ void draw(){
                    s*2*mass[i]/(40*z),
                    s*2*mass[i]/(40*z));
   }
+  vt=1; //scaling velocities only needs to happen once because we are using velocityless verlet
 }

@@ -1,6 +1,7 @@
 var linkedInputs=[
 [document.getElementById("ttext"),document.getElementById("tslider")],
 [document.getElementById("ntext"),document.getElementById("nslider")],
+[document.getElementById("gtext"),document.getElementById("gslider")],
 [document.getElementById("darktext"),document.getElementById("darkslider")],
 [document.getElementById("sizetext"),document.getElementById("sizeslider")],
 [document.getElementById("boxtext"),document.getElementById("boxslider")],
@@ -12,6 +13,7 @@ document.getElementById("box"),
 document.getElementById("axes"),
 document.getElementById("bound"),
 document.getElementById("isometric"),
+document.getElementById("w"),
 ];
 
 linkedInputs.forEach(function(element){
@@ -41,6 +43,7 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 
 	var n = document.getElementById('nslider').value;
 	var t = document.getElementById('tslider').value/20;
+	var g = document.getElementsById('gslider').value/10;
 	var dark=document.getElementById('darkslider').value/100;
 	var size=document.getElementById('sizeslider').value;
 	var startvel=document.getElementById('startvelslider').value;
@@ -49,4 +52,5 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 	var showaxes=document.getElementById('axes').checked;
 	var border=document.getElementById('bound').checked;
 	var isometric=document.getElementById('isometric').checked;
-	pjs.updateSettings(n,t,dark,size,startvel,boxsize,showbox,showaxes,border,isometric); }
+	var showw=document.getElementById('w').checked;
+	pjs.updateSettings(n,t,g,dark,size,startvel,boxsize,showbox,showaxes,border,isometric,showw); }
