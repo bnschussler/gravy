@@ -126,8 +126,8 @@ void reset(){
 void draw(){
   //println(pos[0][0]);
   background(0);
-  println(millis()-time);
-  time=millis();
+  //println(millis()-time);
+  //time=millis();
   
   rx=mouseX*2*PI/width;
   ry=mouseY*2*PI/height;
