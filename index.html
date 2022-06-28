@@ -30,11 +30,12 @@
 		<script type="text/javascript" src="processing.js"></script>
 			
 	</head>
-	<body onload="updateSettings('sketch')">
+	<body onload="initialize()">
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
 		<div>
 			<div class="col">
-				
+				<p>Press 'R' to reset</p>
+				<br/>
 				<p class="nobr">speed:</p>
 				<input type="text" id="ttext" value="5" class="small"/>
 				<input type="range" value="5" id="tslider" min="0" max="40"/>
@@ -48,19 +49,10 @@
 				<input type="text" id="darktext" value="50" class="break small"/>
 				<input type="range" value="50" id="darkslider" min="0" max="100" />
 				<p class="break">Advanced</p>
-				<input type="checkbox" onchange="updateVisibility(this.checked,'advanced')"/>
+				<input id="showAdvanced" type="checkbox" onchange="updateVisibility(this.checked,'advanced')"/>
 			</div>
-			<div class="col" id="advanced" style="display: none">
-				<p class="nobr">particle size:</p>
-				<input type="text" id="sizetext" value="1" class="small"/>
-				<input type="range" value="1" id="sizeslider" min="0" max="10" />
-				<br><p class="nobr">box size:</p>
-				<input type="text" id="boxtext" value="400" class="break small"/>
-				<input type="range" value="400" id="boxslider" min="0" max="400" />
-				<br><p class="nobr">start velocity:</p>
-				<input type="text" id="startveltext" value="6" class="break small"/>
-				<input type="range" value="6" id="startvelslider" min="0" max="40" />
-				<br><br><p>show bounding boxbox</p>
+			<div class="col">
+				<p>show bounding boxbox</p>
 				<input type="checkbox" id="box" checked/>
 				<p class="break">bound particles</p>
 				<input type="checkbox" id="bound" checked/>
@@ -71,11 +63,30 @@
 				<p class="break">isometric</p>
 				<input type="checkbox" id="isometric"/>
 			</div>
+			<div class="col" id="advanced" style="display: none">
+				<p class="nobr">particle size:</p>
+				<input type="text" id="sizetext" value="10" class="small"/>
+				<input type="range" value="1" id="sizeslider" min="0" max="100" />
+				<br><p class="nobr">box size:</p>
+				<input type="text" id="boxtext" value="400" class="break small"/>
+				<input type="range" value="400" id="boxslider" min="0" max="400" />
+				<br><p class="nobr">initial velocity:</p>
+				<input type="text" id="startveltext" value="6" class="break small"/>
+				<input type="range" value="6" id="startvelslider" min="0" max="40" />
+				<br><p class="nobr">initial radius:</p>
+				<input type="text" id="startpostext" value="400" class="break small"/>
+				<input type="range" value="400" id="startposslider" min="0" max="400" />
+			</div>
 			<div class="col">
 				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
 			</div>
 		</div>
 		<script src="inputHandling.js"></script>
-
+		<script>
+			function initialize(){
+				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+				updateSettings('sketch');
+			}
+		</script>
 	</body>
 </html>

@@ -6,6 +6,7 @@ var linkedInputs=[
 [document.getElementById("sizetext"),document.getElementById("sizeslider")],
 [document.getElementById("boxtext"),document.getElementById("boxslider")],
 [document.getElementById("startveltext"),document.getElementById("startvelslider")],
+[document.getElementById("startpostext"),document.getElementById("startposslider")],
 ];
 
 var checkboxes=[
@@ -43,14 +44,15 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 
 	var n = document.getElementById('nslider').value;
 	var t = document.getElementById('tslider').value/20;
-	var g = document.getElementById('gslider').value/10;
+	var g = document.getElementsById('gslider').value/10;
 	var dark=document.getElementById('darkslider').value/100;
-	var size=document.getElementById('sizeslider').value;
+	var size=document.getElementById('sizeslider').value/10;
 	var startvel=document.getElementById('startvelslider').value;
+	var startpos=document.getElementById('startposslider').value;
 	var boxsize=document.getElementById('boxslider').value;
 	var showbox=document.getElementById('box').checked;
 	var showaxes=document.getElementById('axes').checked;
 	var border=document.getElementById('bound').checked;
 	var isometric=document.getElementById('isometric').checked;
 	var showw=document.getElementById('w').checked;
-	pjs.updateSettings(n,t,g,dark,size,startvel,boxsize,showbox,showaxes,border,isometric,showw); }
+	pjs.updateSettings(n,t,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw); }

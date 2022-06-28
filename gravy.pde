@@ -18,7 +18,7 @@ boolean showW=true;
 
 float[][] pos;
 float[] vel;
-float vt=1; //scales down velocities it the timestep is ever changed
+float vt=1; //scales down velocities if the timestep is ever changed
 float[][] pos1;
 float[][] acc;
 float[]  mass;
@@ -27,8 +27,6 @@ float[] w; //angular momentum
 float totalmass;
 int     dim=3; //dimensions
 float   e=20; //softening radius
-float   l;//collision radius
-float   time;
 
 int i;  //some looping constants because you can't iterate through an array...
 int j;
@@ -43,8 +41,10 @@ float ry;
 float x;
 float y;
 float z;
+float l;//collision radius
+float time;
 
-void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
+void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
   n=n1;
   vt=(dt==t1)?1:t1; //scale down velocities at the end of this frame if dt was changed
   dt=t1;
@@ -53,6 +53,7 @@ void updateSettings(int n1,float t1,float g1,float dark1,float size,float startv
   s=size;
   c=size;
   initalvelocities=startvel;
+  initialspheresize=startpos;
   box=boxsize;
   showbox=showbox1;
   showaxes=showaxes1;
@@ -101,9 +102,18 @@ void setup(){
   mass=new float[nmax];
   center=new float[dim];
   w=new float [dim];
-  float[] c = {0,0,0};
+  reset();
+}
+
+void keyPressed(){
+  if(key=='r'){
+    reset();
+  }
+}
+
+void reset(){
   for (i=0; i<nmax; i++){
-    pos[i]=random_point_in_sphere(c,test?40:initialspheresize);
+    pos[i]=random_point_in_sphere(new float[3],test?40:initialspheresize);
     mass[i]=random(100,200);
     totalmass+=mass[i];
     vel=random_point_in_sphere(new float[3],test?0:initalvelocities);
@@ -116,7 +126,7 @@ void setup(){
 void draw(){
   //println(pos[0][0]);
   background(0);
-  //println(millis()-time);
+  println(millis()-time);
   time=millis();
   
   rx=mouseX*2*PI/width;
@@ -207,5 +217,5 @@ void draw(){
                    s*2*mass[i]/(40*z));
   }
   vt=1; //scaling velocities only needs to happen once because we are using velocityless verlet
-  box=(box+399)%400;
+  //box=(box+399)%400;
 }
