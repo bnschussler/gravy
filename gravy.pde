@@ -43,7 +43,7 @@ float z;
 float l;//collision radius
 float time;
 
-void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
+void updateSettings(int n1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
   n=n1;
   g=g1;
   dark=floor(n*dark1);
