@@ -211,7 +211,7 @@ void draw(){
       pos[i][k]+=(pos[i][k]-pos1[i][k])+acc[i][k]*dt*dt;
       pos1[i][k]=temp;
       acc[i][k]=0;
-      if(boundary){pos[i][k]=pos[i][k]%box;}
+      if(boundary){pos[i][k]=constrain(pos[i][k],-box,box);}
     }
     //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
