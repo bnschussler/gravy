@@ -18,7 +18,6 @@ boolean showW=true;
 
 float[][] pos;
 float[] vel;
-float vt=1; //scales down velocities if the timestep is ever changed
 float[][] pos1;
 float[][] acc;
 float[]  mass;
@@ -46,8 +45,6 @@ float time;
 
 void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
   n=n1;
-  vt=(dt==t1)?1:t1; //scale down velocities at the end of this frame if dt was changed
-  dt=t1;
   g=g1;
   dark=floor(n*dark1);
   s=size;
@@ -200,7 +197,7 @@ void draw(){
   for (i=0; i<n; i++){
     for (k=0; k<dim; k++){
       temp=pos[i][k];
-      pos[i][k]+=vt*(pos[i][k]-pos1[i][k])+acc[i][k]*dt*dt;
+      pos[i][k]+=(pos[i][k]-pos1[i][k])+acc[i][k]*dt*dt;
       pos1[i][k]=temp;
       acc[i][k]=0;
       pos[i][k]-=center[k];//recentering camera
@@ -216,6 +213,5 @@ void draw(){
                    s*2*mass[i]/(40*z),
                    s*2*mass[i]/(40*z));
   }
-  vt=1; //scaling velocities only needs to happen once because we are using velocityless verlet
   //box=(box+399)%400;
 }
