@@ -1,7 +1,7 @@
 boolean test=false;
 
 int     nmax=1600;
-int      n=test?2:100; //number of objects
+int      n=test?2:200; //number of objects
 int     dark=50; //how many objects have no collision
 float    dt=0.25; //timestep
 float   s=1; //visual size multiplier
@@ -213,5 +213,5 @@ void draw(){
                    s*2*mass[i]/(40*z),
                    s*2*mass[i]/(40*z));
   }
-  box=(box+399)%400;
+  //box=(box+399)%400;
 }
