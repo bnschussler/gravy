@@ -34,7 +34,7 @@
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
 		<div>
 			<div class="col">
-				<p>Press 'R' to reset</p>
+				<input type="button" onclick="Processing.getInstanceById('sketch').reset()" value="Reset"/>
 				<br><p class="nobr"># of particles:</p>
 				<input type="text" id="ntext" value="200" class="break small" />
 				<input type="range" value="100" id="nslider" min="0" max="1600" />
