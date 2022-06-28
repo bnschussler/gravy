@@ -30,13 +30,13 @@
 		<script type="text/javascript" src="processing.js"></script>
 			
 	</head>
-	<body onload="initialize()">
+	<body>
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
 		<div>
 			<div class="col">
 				<input type="button" onclick="Processing.getInstanceById('sketch').reset()" value="Reset"/>
 				<br><p class="nobr"># of particles:</p>
-				<input type="text" id="ntext" value="200" class="break small" />
+				<input type="text" id="ntext" value="100" class="break small" />
 				<input type="range" value="100" id="nslider" min="0" max="1600" />
 				<br><p class="nobr">gravity strength:</p>
 				<input type="text" id="gtext" value="10" class="break small" />
@@ -65,23 +65,24 @@
 				<input type="range" value="10" id="sizeslider" min="0" max="100" />
 				<br><p class="nobr">box size:</p>
 				<input type="text" id="boxtext" value="400" class="break small"/>
-				<input type="range" value="400" id="boxslider" min="1" max="400" />
+				<input type="range" value="400" id="boxslider" min="0" max="400" />
 				<br><p class="nobr">initial velocity:</p>
 				<input type="text" id="startveltext" value="6" class="break small"/>
 				<input type="range" value="6" id="startvelslider" min="0" max="40" />
 				<br><p class="nobr">initial radius:</p>
 				<input type="text" id="startpostext" value="400" class="break small"/>
 				<input type="range" value="400" id="startposslider" min="0" max="400" />
+				<p class="break">center camera</p>
+				<input type="checkbox" id="centerCamera"/>
 			</div>
 			<div class="col">
-				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
+				<canvas id="sketch" data-processing-sources="gravy.pde" onload="initialize()"></canvas>
 			</div>
 		</div>
 		<script src="inputHandling.js"></script>
 		<script>
 			function initialize(){
 				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-				updateSettings('sketch');
 			}
 		</script>
 	</body>

@@ -1,7 +1,7 @@
 boolean test=false;
 
 int     nmax=1600;
-int      n=test?2:200; //number of objects
+int      n=test?2:100; //number of objects
 int     dark=50; //how many objects have no collision
 float    dt=0.25; //timestep
 float   s=1; //visual size multiplier
@@ -15,6 +15,7 @@ boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
 boolean showW=false;
+boolean centerCamera=false;
 
 float[][] pos;
 float[] vel;
@@ -43,7 +44,7 @@ float z;
 float l;//collision radius
 float time;
 
-void updateSettings(int n1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
+void updateSettings(int n1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1,boolean centerCamera1){
   n=n1;
   g=g1;
   dark=floor(n*dark1);
@@ -57,6 +58,7 @@ void updateSettings(int n1,float g1,float dark1,float size,float startvel,float 
   boundary=boundary1;
   isometric=isometric1;
   showW=showW1;
+  centerCamera=centerCamera1;
   //println(n,dt,dark,s,c,initalvelocities,box,showbox,showaxes,boundary,isometric);
 }
 
@@ -150,21 +152,30 @@ void draw(){
     stroke(255,255,255);
   }
   
-  
-  center[0]=0;
-  center[1]=0;
-  center[2]=0;
-  w[0]=0;
-  w[1]=0;
-  w[2]=0;
-  for (i=0; i<n; i++){
-    for (k=0; k<dim; k++){
-      center[k]+=constrain(pos[i][k],-800,800)*mass[i]/totalmass;//we constrain so free particles don't skew the average
-      w[k]+=pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]);
+  if(centerCamera){
+    center[0]=0;
+    center[1]=0;
+    center[2]=0;
+    for (i=0; i<n; i++){
+      for (k=0; k<dim; k++){
+        center[k]+=constrain(pos[i][k],-800,800)*mass[i]/totalmass;//we constrain so free particles don't skew the average
+      }
     }
+    
+    pos[i][k]-=center[k];//recentering camera
+    pos1[i][k]-=center[k];      
   }
+  
   //printArray(center);
   if(showW){
+    w[0]=0;
+    w[1]=0;
+    w[2]=0;
+    for (i=0; i<n; i++){
+      for (k=0; k<dim; k++){
+        w[k]+=pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]);
+      }
+    }
     stroke(255,0,255);
     line3(rx,ry,0,0,0,w[0]/n,w[1]/n,w[2]/n);
   }
@@ -200,8 +211,6 @@ void draw(){
       pos[i][k]+=(pos[i][k]-pos1[i][k])+acc[i][k]*dt*dt;
       pos1[i][k]=temp;
       acc[i][k]=0;
-      pos[i][k]-=center[k];//recentering camera
-      pos1[i][k]-=center[k];//this always lags behind by a frame, which gives the recentering a smoother look
       if(boundary){pos[i][k]=max(min(pos[i][k],box),-box);}
     }
     //if(test) pos[i][2]=0;

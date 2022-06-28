@@ -14,6 +14,7 @@ document.getElementById("axes"),
 document.getElementById("bound"),
 document.getElementById("isometric"),
 document.getElementById("w"),
+document.getElementById("centerCamera"),
 ];
 
 linkedInputs.forEach(function(element){
@@ -53,4 +54,5 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 	var border=document.getElementById('bound').checked;
 	var isometric=document.getElementById('isometric').checked;
 	var showw=document.getElementById('w').checked;
-	pjs.updateSettings(n,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw); }
+	var center=document.getElementById('centerCamera').checked;
+	pjs.updateSettings(n,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw,center); }
