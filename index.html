@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="processing.js"></script>
 			
 	</head>
-	<body>
+	<body onload="initialize()">
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
 		<div>
 			<div class="col">
@@ -76,7 +76,7 @@
 				<input type="checkbox" id="centerCamera"/>
 			</div>
 			<div class="col">
-				<canvas id="sketch" data-processing-sources="gravy.pde" onload="initialize()"></canvas>
+				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
 			</div>
 		</div>
 		<script src="inputHandling.js"></script>
