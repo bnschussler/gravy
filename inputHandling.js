@@ -44,7 +44,7 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 
 	var n = document.getElementById('nslider').value;
 	var t = document.getElementById('tslider').value/20;
-	var g = document.getElementsById('gslider').value/10;
+	var g = document.getElementById('gslider').value/10;
 	var dark=document.getElementById('darkslider').value/100;
 	var size=document.getElementById('sizeslider').value/10;
 	var startvel=document.getElementById('startvelslider').value;
