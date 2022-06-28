@@ -28,13 +28,8 @@
 
 		</style>
 		<script type="text/javascript" src="processing.js"></script>
-		<script>
-			function initialize(){
-				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-			}
-		</script>
 	</head>
-	<body onload="initialize()">
+	<body>
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
 		<div>
 			<div class="col">
@@ -84,5 +79,9 @@
 			</div>
 		</div>
 		<script src="inputHandling.js"></script>
+		<script>
+			updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+			updateSettings('sketch');
+		</script>
 	</body>
 </html>
