@@ -180,7 +180,7 @@ void draw(){
         l=(mass[i]+mass[j])/40*c;
         if(d<l){//collisions
           for (k=0; k<dim; k++){
-            temp=(pos[i][k]-pos[j][k])*(l-d)/l;
+            temp=(pos[i][k]-pos[j][k])*(l-d)/d;
             pos[i][k]+=temp/2;
             pos[j][k]-=temp/2;
           } 
