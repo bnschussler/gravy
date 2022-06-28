@@ -14,7 +14,7 @@ float   g=1;
 boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
-boolean showW=true;
+boolean showW=false;
 
 float[][] pos;
 float[] vel;
