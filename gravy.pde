@@ -1,7 +1,7 @@
 boolean test=false;
 
 int     nmax=1600;
-int      n=test?2:200; //number of objects
+int      n=test?2:600; //number of objects
 int     dark=0; //how many objects have no collision
 float    dt=0.25; //timestep
 float   s=1; //visual size multiplier
@@ -15,11 +15,6 @@ boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
 boolean showW=true;
-
-void keyPressed(){
-  dt=1/dt;
-  vt=dt;
-}
 
 float[][] pos;
 float[] vel;
@@ -51,8 +46,8 @@ float z;
 
 void updateSettings(int n1,float t1,float g1,float dark1,float size,float startvel,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1){
   n=n1;
+  vt=(dt==t1)?1:t1; //scale down velocities at the end of this frame if dt was changed
   dt=t1;
-  vt=t1; //scale down velocities at the end of this frame
   g=g1;
   dark=floor(n*dark1);
   s=size;
@@ -119,7 +114,7 @@ void setup(){
 }
 
 void draw(){
-  println(pos[0][0]);
+  //println(pos[0][0]);
   background(0);
   //println(millis()-time);
   time=millis();
@@ -212,4 +207,5 @@ void draw(){
                    s*2*mass[i]/(40*z));
   }
   vt=1; //scaling velocities only needs to happen once because we are using velocityless verlet
+  box=(box+399)%400;
 }
