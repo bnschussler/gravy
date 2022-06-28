@@ -1,5 +1,4 @@
 var linkedInputs=[
-[document.getElementById("ttext"),document.getElementById("tslider")],
 [document.getElementById("ntext"),document.getElementById("nslider")],
 [document.getElementById("gtext"),document.getElementById("gslider")],
 [document.getElementById("darktext"),document.getElementById("darkslider")],
@@ -43,7 +42,6 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 	var pjs = Processing.getInstanceById(id);
 
 	var n = document.getElementById('nslider').value;
-	var t = document.getElementById('tslider').value/20;
 	var g = document.getElementById('gslider').value/10;
 	var dark=document.getElementById('darkslider').value/100;
 	var size=document.getElementById('sizeslider').value/10;
@@ -55,4 +53,4 @@ function updateSettings(id) {	//help from http://processingjs.nihongoresources.c
 	var border=document.getElementById('bound').checked;
 	var isometric=document.getElementById('isometric').checked;
 	var showw=document.getElementById('w').checked;
-	pjs.updateSettings(n,t,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw); }
+	pjs.updateSettings(n,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw); }
