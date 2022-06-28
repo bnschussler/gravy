@@ -28,7 +28,12 @@
 
 		</style>
 		<script type="text/javascript" src="processing.js"></script>
-			
+		<script src="inputHandling.js"></script>
+		<script>
+			function initialize(){
+				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+			}
+		</script>
 	</head>
 	<body onload="initialize()">
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
@@ -79,11 +84,5 @@
 				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
 			</div>
 		</div>
-		<script src="inputHandling.js"></script>
-		<script>
-			function initialize(){
-				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-			}
-		</script>
 	</body>
 </html>
