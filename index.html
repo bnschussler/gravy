@@ -28,6 +28,7 @@
 
 		</style>
 		<script type="text/javascript" src="processing.js"></script>
+			
 	</head>
 	<body>
 		<h1>Gravy: A (janky) Galaxy Simulation</h1>
@@ -80,8 +81,10 @@
 		</div>
 		<script src="inputHandling.js"></script>
 		<script>
-			updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-			updateSettings('sketch');
+			window.addEventListener('load', (event) => {
+				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+				updateSettings('sketch');
+			});
 		</script>
 	</body>
 </html>
