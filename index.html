@@ -81,10 +81,10 @@
 		</div>
 		<script src="inputHandling.js"></script>
 		<script>
-			window.addEventListener('load', (event) => {
-				updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-				updateSettings('sketch');
-			});
+			setTimeout(function(){
+					updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+					updateSettings('sketch');
+				}, 250);
 		</script>
 	</body>
 </html>
