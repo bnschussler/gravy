@@ -31,7 +31,11 @@
 			
 	</head>
 	<body>
-		<h1>Gravy: A (janky) Galaxy Simulation</h1>
+		<h1>Gravy: A Galaxy Simulation</h1>
+		<br>
+		<p> This is my attempt at a simulation of galaxy formation! the solid circles are regular matter particles, and the hollow ones are dark matter. As the matter collides, it forms a disk, while the non-colliding dark matter stays as a sphere.
+		<br><br> This simulation isn't very true to real life, as everything is simplified for optimization purposes; additionally, rounding errors in the collision handler tends to dump extra angular momentum into the system. Nevertheless, it looks pretty and is fun to mess with! </p>
+		
 		<div>
 			<div class="col">
 				<input type="button" onclick="Processing.getInstanceById('sketch').reset()" value="Reset"/>
