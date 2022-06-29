@@ -161,9 +161,12 @@ void draw(){
         center[k]+=constrain(pos[i][k],-800,800)*mass[i]/totalmass;//we constrain so free particles don't skew the average
       }
     }
-    
-    pos[i][k]-=center[k];//recentering camera
-    pos1[i][k]-=center[k];      
+    for (i=0; i<n; i++){
+      for (k=0; k<dim; k++){
+        pos[i][k]-=center[k];//recentering camera
+        pos1[i][k]-=center[k];   
+      }
+    }
   }
   
   //printArray(center);
