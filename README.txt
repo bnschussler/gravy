@@ -1,1 +1,1 @@
-just messing around with github pages and processing at the moment
+A (not very good) simulation of how galaxies form. I wanted to test out embedding processing documents in HTML, and it was a nightmare because processing acts differently on its application and on the web, and because of some JS security protocol, I couldn't iterate this on my local computer. It makes everything a pain to iterate and bug fix, which is why there are 100+ commits to this repo, as well as why I never plan on doing something like this again.
