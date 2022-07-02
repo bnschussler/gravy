@@ -1,57 +1,58 @@
-boolean test=false;
-
-int     nmax=1600;
-int      n=test?2:100; //number of objects
-int     dark=50; //how many objects have no collision
+int     n=200; //number of objects
+int     dark=0; //how many objects have no collision
 float    dt=0.25; //timestep
 float   s=1; //visual size multiplier
 float   c=1; //collision size multiplier
 float   box=400; //box size
 boolean boundary=true;
-float   initalvelocities=6;
-float   initialspheresize=400;
+float   initialv=0;
+float   initialr=400;
 float   g=1;
+int     dim=3; //dimensions
 boolean showbox=true;
 boolean showaxes=false;
 boolean isometric=false;
 boolean showW=false;
 boolean centerCamera=false;
 
+float[] rotation;
+int ri=0; //which plane is being rotated
+
 float[][] pos;
-float[] vel;
 float[][] pos1;
 float[][] acc;
 float[]  mass;
 float[] center; //center of mass
 float[] w; //angular momentum
 float totalmass;
-int     dim=3; //dimensions
 float   e=20; //softening radius
 
 int i;  //some looping constants because you can't iterate through an array...
 int j;
 int k;
+int k1;
 float d;
 float dsq;
-float[] out; //temp variables
+float[] tempVec; //temp variables
+float[] tempVec1;
+float[] tempVec2;
 float temp;
 float temp1;
-float rx;
-float ry;
-float x;
-float y;
-float z;
 float l;//collision radius
 float time;
 
-void updateSettings(int n1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1,boolean centerCamera1){
+void updateSettings(int n1,int dim1,float g1,float dark1,float size,float startvel,float startpos,float boxsize,boolean showbox1,boolean showaxes1,boolean boundary1,boolean isometric1,boolean showW1,boolean centerCamera1){
+  reDimension(dim1);
+  reParticle(n1);
+  
   n=n1;
+  dim=dim1;
   g=g1;
   dark=floor(n*dark1);
   s=size;
   c=size;
-  initalvelocities=startvel;
-  initialspheresize=startpos;
+  initialv=startvel;
+  initialr=startpos;
   box=boxsize;
   showbox=showbox1;
   showaxes=showaxes1;
@@ -59,48 +60,117 @@ void updateSettings(int n1,float g1,float dark1,float size,float startvel,float 
   isometric=isometric1;
   showW=showW1;
   centerCamera=centerCamera1;
-  //println(n,dt,dark,s,c,initalvelocities,box,showbox,showaxes,boundary,isometric);
 }
 
-float[] random_point_in_sphere(float[] center, float r){ //terrible implementation but I'm tired rn
-  out=new float[3];
-  out[0]=2;
-  while(dist(0,0,0,out[0],out[1],out[2])>1){
-    out[0]=random(-1,1);
-    out[1]=random(-1,1);
-    out[2]=random(-1,1);
+float[] project(float[] rotations,float[] vector){  
+  tempVec=new float[max(3,dim)];
+  arrayCopy(vector,tempVec);
+  for(int k=0;k<max(3,dim);k++){
+    k1=(k+2)%max(3,dim);
+    temp=cos(rotations[k1])*tempVec[k1]+sin(rotations[k1])*tempVec[(k1+1)%max(3,dim)];
+    temp1=-sin(rotations[k1])*tempVec[k1]+cos(rotations[k1])*tempVec[(k1+1)%max(3,dim)];
+    tempVec[k1]=temp;
+    tempVec[(k1+1)%max(3,dim)]=temp1;
   }
-  out[0]=out[0]*r+center[0];
-  out[1]=out[1]*r+center[1];
-  out[2]=out[2]*r+center[2];
-  return out;
+  tempVec[2]=isometric?1:(tempVec[2]+1200)/800; //camera angle
+  return tempVec;
 }
 
-void project(float rx,float ry,float x1,float y1,float z1){ //dumps values into x,y,z variables
-  x=cos(rx)*x1+sin(rx)*z1;
-  y=cos(ry)*y1+sin(ry)*(-sin(rx)*x1+cos(rx)*z1);
-  z=isometric?1:(-sin(ry)*y1+cos(ry)*(-sin(rx)*x1+cos(rx)*z1)+1200)/800;
+void line3(float[] rotations,float[] point1,float[] point2){
+  point1=project(rotations,point1);
+  point2=project(rotations,point2);
+  line(point1[0]/point1[2]+width/2,point1[1]/point1[2]+height/2,point2[0]/point2[2]+width/2,point2[1]/point2[2]+height/2);
 }
 
-void line3(float rx,float ry,float x1,float y1,float z1,float x2,float y2,float z2){
-  project(rx,ry,x1,y1,z1);
-  temp=x/z;
-  temp1=y/z;
-  project(rx,ry,x2,y2,z2);
-  //stroke(255,255,255);
-  line(temp+width/2,temp1+height/2,x/z+width/2,y/z+height/2);
+void reDimension(int dim1){//adds/removes dimensions
+  if(dim1!=dim){
+    center=new float[max(3,dim1)];
+    acc=new float[n][max(3,dim1)];
+    tempVec=new float[max(3,dim1)]; 
+    tempVec1=new float[max(3,dim1)];
+    tempVec2=new float[max(3,dim1)];
+    if (dim1>dim){//add dimensions
+      int temp=max(3,dim1)-max(3,dim);
+      for(i=0;i<n;i++){
+        if(temp>0){
+          pos[i]=concat(pos[i],new float[temp]);
+          pos1[i]=concat(pos1[i],new float[temp]);
+          rotation=concat(rotation,new float[temp]);
+        }
+        for(j=dim;j<dim1;j++){
+          pos1[i][j]=random(-1,1)*dt;
+        }
+      }
+    }
+    if (dim1<dim){ //remove dimensions
+      int temp=max(3,dim)-max(3,dim1);
+      int temp1=max(3,dim)-dim1;
+      rotation=subset(rotation,0,max(3,dim1));
+      ri=0;
+      for(i=0;i<n;i++){
+        pos[i]=subset(pos[i],0,dim1);
+        pos1[i]=subset(pos1[i],0,dim1);
+        if(temp<=0){
+          pos[i]=concat(pos[i],new float[temp1]);
+          pos1[i]=concat(pos1[i],new float[temp1]);
+        }
+      }
+    }
+  }
+}
+
+void reParticle(int n1){//adds/removes particles
+  if (n1>n){//add particles
+    mass=concat(mass,new float[n1-n]);
+    acc=new float[n1][dim];
+    float[][] tempPos=new float[n1][dim];
+    float[][] tempPos1=new float[n1][dim];
+    for(i=0;i<n;i++){
+      tempPos[i]=pos[i];
+      tempPos1[i]=pos1[i];
+    }
+    for(i=n;i<n1;i++){
+      for(k=0;k<dim;k++){
+        tempPos[i][k]=random(-1,1)*initialr;
+        tempPos1[i][k]=tempPos[i][k]-random(-1,1)*initialv*dt;
+      }
+      mass[i]=random(100,200);
+      totalmass+=mass[i];
+    }
+    pos=tempPos;
+    pos1=tempPos1;
+  }
+  
+  if (n1<n){ //remove particles
+    mass=subset(mass,n1);
+    totalmass=0;
+    acc=new float[n1][dim];
+    float[][] tempPos=new float[n1][dim];
+    float[][] tempPos1=new float[n1][dim];
+    for(i=0;i<n1;i++){
+      tempPos[i]=pos[i];
+      tempPos1[i]=pos1[i];
+      totalmass+=mass[i];
+    }
+    pos=tempPos;
+    pos1=tempPos1;
+  }
 }
 
 void setup(){
   stroke(255,255,255);
   size(800,800);
-  pos=new float[nmax][dim];
-  pos1=new float[nmax][dim];
-  vel=new float[dim];
-  acc=new float[nmax][dim];
-  mass=new float[nmax];
-  center=new float[dim];
-  w=new float [dim];
+  pos=new float[n][max(3,dim)];  //the max thing is so that we can still look at things in 3d even if the positions are 2d
+  pos1=new float[n][max(3,dim)];
+  acc=new float[n][max(3,dim)];
+  mass=new float[n];
+  center=new float[max(3,dim)];
+  w=new float[3]; //only relevant in 3 dimensions
+  rotation=new float[max(3,dim)];  //this isn't enough for any rotation we could want (that would take dim*(dim-1) floats), but it's enough for our tiny 3d minds to be satisfied.
+      //it also means that you can get gimbal lock, but I'm not dealing with quaternions/octonians etc. to do n dimentional rotations the right way. This was supposed to be a quick add-on, not an overhaul.
+  tempVec=new float[max(3,dim)];
+  tempVec1=new float[max(3,dim)];
+  tempVec2=new float[max(3,dim)];
   reset();
 }
 
@@ -108,50 +178,61 @@ void keyPressed(){
   if(key=='r'){
     reset();
   }
+  if(key=='q'){
+    ri=(ri+1)%(dim-1);
+  }
+  if(key=='a'){
+    rotation=new float[max(3,dim)];
+    ri=0;
+  }
+  if(key=='l'){
+    reDimension(dim+1);
+    dim++;
+  }
+  if(key=='k'){
+    reDimension(dim-1);
+    dim--;
+  }
 }
 
 void reset(){
-  for (i=0; i<nmax; i++){
-    pos[i]=random_point_in_sphere(new float[3],test?40:initialspheresize);
+  for (i=0; i<n; i++){
+    for (k=0;k<dim;k++){
+      pos[i][k]=random(-1,1)*initialr;
+      pos1[i][k]=pos[i][k]-random(-1,1)*initialv*dt;
+    }
     mass[i]=random(100,200);
     totalmass+=mass[i];
-    vel=random_point_in_sphere(new float[3],test?0:initalvelocities);
+  }
+}
+
+void drawBox(int dim, float size){//terrible implementation but I'm tired rn
+  
+  for(i=0;i<pow(2,dim);i++){
     for(k=0;k<dim;k++){
-      pos1[i][k]=pos[i][k]-vel[k]*dt;
+      tempVec1[k]=size*(2*((i>>k)&1)-1);
+      tempVec2[k]=size*(2*((i>>k)&1)-1);
+    }
+    for(k=0;k<dim;k++){
+      tempVec2[k]=0;
+      line3(rotation,tempVec1,tempVec2);
+      tempVec2[k]=tempVec1[k];
     }
   }
 }
 
 void draw(){
-  //println(pos[0][0]);
+  stroke(255);
   background(0);
   //println(millis()-time);
   //time=millis();
-  
-  rx=mouseX*2*PI/width;
-  ry=mouseY*2*PI/height;
+  rotation[ri]+=(mouseX-pmouseX)*2*PI/width;
+  rotation[ri+1]+=(mouseY-pmouseY)*2*PI/height;
   
   //box
   if(showbox){
-    for(i=-1;i<=1;i+=2){
-      for(j=-1;j<=1;j+=2){
-        line3(rx,ry,box*i,box*j,box,box*i,box*j,-box);
-        line3(rx,ry,box*i,box,box*j,box*i,-box,box*j);
-        line3(rx,ry,box,box*i,box*j,-box,box*i,box*j);
-      }
-    }
-  }
-  //axes
-  if(showaxes){
-    stroke(255,0,0);
-    line3(rx,ry,0,0,0,100,0,0);
-    stroke(0,255,0);
-    line3(rx,ry,0,0,0,0,100,0);
-    stroke(0,0,255);
-    line3(rx,ry,0,0,0,0,0,100);
-    stroke(255,255,255);
-  }
-  
+    drawBox(dim,box);
+  }//centering camera
   if(centerCamera){
     center[0]=0;
     center[1]=0;
@@ -168,19 +249,17 @@ void draw(){
       }
     }
   }
-  
-  //printArray(center);
-  if(showW){
+  if(dim<=3 && showW){//showing angular momentum
     w[0]=0;
     w[1]=0;
     w[2]=0;
     for (i=0; i<n; i++){
-      for (k=0; k<dim; k++){
-        w[k]+=pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]);
+      for (k=0; k<max(3,dim); k++){
+        w[k]+=(pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]))/n;
       }
     }
     stroke(255,0,255);
-    line3(rx,ry,0,0,0,w[0]/n,w[1]/n,w[2]/n);
+    line3(rotation,new float[3],w);
   }
   
   for (i=0; i<n; i++){
@@ -192,7 +271,7 @@ void draw(){
       if(i>=dark && j>=dark){  //if both particles are normal matter
         d=sqrt(dsq);
         l=(mass[i]+mass[j])/40*c;
-        if(d<l){//collisions
+        if(d<l && d!=0){//collisions
           for (k=0; k<dim; k++){
             temp=(pos[i][k]-pos[j][k])*(l-d)/d;
             pos[i][k]+=temp/2;
@@ -202,7 +281,7 @@ void draw(){
       }
       dsq+=pow(e,2); //softening; not ideal, but a good quick fix
       for (k=0; k<dim; k++){
-        temp=g*mass[j]*(pos[i][k]-pos[j][k])/pow(dsq,dim/2.);
+        temp=g*mass[j]*(pos[i][k]-pos[j][k])/pow(dsq,3/2.);
         acc[i][k]-=temp;
         acc[j][k]+=temp;
       }
@@ -223,14 +302,45 @@ void draw(){
         }
       }
     }
-    //if(test) pos[i][2]=0;
     fill(i<dark?0:255);
-    project(rx,ry,pos[i][0],pos[i][1],pos[i][2]);
+    tempVec=project(rotation,pos[i]);
     stroke(255);
-    if(z>0) ellipse(x/z+width/2,
-                   y/z+height/2,
-                   s*2*mass[i]/(40*z),
-                   s*2*mass[i]/(40*z));
+    if(tempVec[2]>0) ellipse(tempVec[0]/tempVec[2]+width/2,
+                   tempVec[1]/tempVec[2]+height/2,
+                   s*2*mass[i]/(40*tempVec[2]),
+                   s*2*mass[i]/(40*tempVec[2]));
   }
   //box=(box+399)%400;
+  //axes
+  if(showaxes){
+    for(k=0;k<dim;k++){
+    tempVec=new float[max(3,dim)];
+    tempVec[k]=100;
+    switch(k){
+      case 0:
+        stroke(255,0,0);
+        break;
+      case 1:
+        stroke(0,255,0);
+        break;
+      case 2:
+        stroke(0,0,255);
+        break;
+      case 3:
+        stroke(255,255,0);
+        break;
+      case 4:
+        stroke(0,255,255);
+        break;
+      case 5:
+        stroke(255,0,255);
+        break;
+      default:
+        stroke(255,255,255);
+        break;
+    }
+    line3(rotation,new float[max(3,dim)],tempVec);
+    }
+  }
+
 }
