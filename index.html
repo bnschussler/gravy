@@ -11,7 +11,7 @@
 
 			.col{
 				float: left;
-				width: 200px;
+				width: 150px;
 				height: 350px;
 				padding: 10px;
 			}
@@ -29,13 +29,12 @@
 			}
 
 			.small{
-				width: 4ch;
+				width: 3ch;
 			}
 
 
 
 		</style>
-		<script type="text/javascript" src="processing.js"></script>
 			
 	</head>
 	<body>
@@ -47,13 +46,14 @@
 		<div class="row">
 			<div id="not_advanced">
 				<div class="col">
-					<input type="button" onclick="Processing.getInstanceById('sketch').reset()" value="Reset"/>
+					<input type="button" class="nobr" onclick="reset()" value="Reset"/>
+					<input type="button" onclick="run=!run;this.value=(this.value=='Pause')?'Unpause':'Pause'"" value="Pause"/>
 					<br><p class="nobr"># of particles:</p>
 					<input type="text" id="ntext" value="200" class="break small" />
-					<input type="range" value="200" id="nslider" min="0" max="1500" />
+					<input type="range" value="200" id="nslider" min="0" max="400" />
 					<br><p class="nobr">gravity strength:</p>
 					<input type="text" id="gtext" value="10" class="break small" />
-					<input type="range" value="20" id="gslider" min="0" max="100" />
+					<input type="range" value="20" id="gslider" min="-10" max="100" />
 					<br><p class="nobr">% dark matter:</p>
 					<input type="text" id="darktext" value="50" class="break small"/>
 					<input type="range" value="50" id="darkslider" min="0" max="100" />
@@ -98,7 +98,7 @@
 				</div>
 			</div>
 			<div class="col">
-				<canvas id="sketch" data-processing-sources="gravy.pde"></canvas>
+				<canvas id="sketch" width="800" height="800" onmousemove="getCoords(event)"></canvas>
 			</div>
 		</div>
 		<p class="break">Advanced</p>
@@ -106,12 +106,14 @@
 			updateVisibility(this.checked,'advanced');
 			updateVisibility(!this.checked,'not_advanced');"/>
 		<script src="inputHandling.js"></script>
+		<script src="simulation.js"></script>
 		<script>
-			setTimeout(function(){ //the worst workaround to things not loading in time: just wait a fixed amount before trying once. Luckily, it's not that bad if this fails the first time, since everything re-updates as soon as any settings are changed.
-					updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-					updateVisibility(!document.getElementById('showAdvanced').checked,'not_advanced');
-					updateSettings('sketch');
-				}, 250);
+			updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
+			updateVisibility(!document.getElementById('showAdvanced').checked,'not_advanced');
+			updateSettings();
+			setInterval(function(){
+			  draw();
+			}, 30);
 		</script>
 	</body>
 </html>
