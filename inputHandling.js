@@ -1,42 +1,42 @@
 var linked=[
-[document.getElementById("ntext"),document.getElementById("nslider")],
-[document.getElementById("gtext"),document.getElementById("gslider")],
-[document.getElementById("darktext"),document.getElementById("darkslider")],
-[document.getElementById("sizetext"),document.getElementById("sizeslider")],
-[document.getElementById("boxtext"),document.getElementById("boxslider")],
-[document.getElementById("startveltext"),document.getElementById("startvelslider")],
-[document.getElementById("startpostext"),document.getElementById("startposslider")],
+["ntext","nslider"],
+["gtext","gslider"],
+["darktext","darkslider"],
+["sizetext","sizeslider"],
+["boxtext","boxslider"],
+["startveltext","startvelslider"],
+["startpostext","startposslider"],
 ];
 
 var inputs=[
-document.getElementById("box"),
-document.getElementById("axes"),
-document.getElementById("bound"),
-document.getElementById("isometric"),
-document.getElementById("w"),
-document.getElementById("centerCamera"),
-document.getElementById("dimensions"),
-document.getElementById("ntext"),document.getElementById("nslider"),
-document.getElementById("gtext"),document.getElementById("gslider"),
-document.getElementById("darktext"),document.getElementById("darkslider"),
-document.getElementById("sizetext"),document.getElementById("sizeslider"),
-document.getElementById("boxtext"),document.getElementById("boxslider"),
-document.getElementById("startveltext"),document.getElementById("startvelslider"),
-document.getElementById("startpostext"),document.getElementById("startposslider"),
+"box",
+"axes",
+"bound",
+"isometric",
+"w",
+"centerCamera",
+"dimensions",
+"ntext","nslider",
+"gtext","gslider",
+"darktext","darkslider",
+"sizetext","sizeslider",
+"boxtext","boxslider",
+"startveltext","startvelslider",
+"startpostext","startposslider",
 ];
 
 linked.forEach(function(element){
-	element[0].addEventListener("input",function(){ //these should only trigeer with use input, not when they edit eachother's values
-		element[1].value=element[0].value;
+	document.getElementById(element[0]).addEventListener("input",function(){ //these should only trigeer with use input, not when they edit eachother's values
+		document.getElementById(element[1]).value=document.getElementById(element[0]).value;
 	});
-	element[1].addEventListener("input",function(){
-		element[0].value=element[1].value;
+	document.getElementById(element[1]).addEventListener("input",function(){
+		document.getElementById(element[0]).value=document.getElementById(element[1]).value;
 	});
 });
 
 inputs.forEach(function(element){
-	element.addEventListener("input",function(){
-		updateSettings("sketch");
+	document.getElementById(element).addEventListener("input",function(){
+		updateSettings();
 	});
 });
 
@@ -45,19 +45,41 @@ function updateVisibility(show,id){
 	obj.style.display=show?"initial":"none";
 }
 
-function updateSettings() {	//help from http://procesMath.singjs.nihongoresources.com/procesMath.sing%20on%20the%20web/#interface
-	let n = document.getElementById('nslider').value;
-	let dim1=document.getElementById('dimensions').value;
-	let g = document.getElementById('gslider').value/10;
-	let dark=document.getElementById('darkslider').value/100;
-	let size=document.getElementById('sizeslider').value/10;
-	let startvel=document.getElementById('startvelslider').value;
-	let startpos=document.getElementById('startposslider').value;
-	let boxsize=document.getElementById('boxslider').value;
-	let showbox=document.getElementById('box').checked;
-	let showaxes=document.getElementById('axes').checked;
-	let border=document.getElementById('bound').checked;
-	let isometric=document.getElementById('isometric').checked;
-	let showw=document.getElementById('w').checked;
-	let center=document.getElementById('centerCamera').checked;
-	updateSettings1(n,dim1,g,dark,size,startvel,startpos,boxsize,showbox,showaxes,border,isometric,showw,center); }
+document.addEventListener('keydown', function(event) {//from https://stackoverflow.com/questions/1846599/how-to-find-out-what-character-key-is-pressed
+  const key = event.key; // "a", "1", "Shift", etc.
+  if(key=='r'){
+    reset();
+  }
+  if(key=='q'){
+    ri=(ri+1)%(cdim-1);
+  }
+  if(key=='a'){
+    rotation.fill(0);
+    ri=0;
+  }
+  if(key=='l'){
+    document.getElementById('dimensions').value=parseInt(document.getElementById('dimensions').value)+1;
+    updateSettings();
+  }
+  if(key=='k'){
+    document.getElementById('dimensions').value=parseInt(document.getElementById('dimensions').value)-1;
+    updateSettings();
+  }
+});
+
+function updateSettings() {
+	reParticle(document.getElementById('ntext').value);
+	reDimension(document.getElementById('dimensions').value);
+	g = document.getElementById('gtext').value/10;
+	dark=document.getElementById('darktext').value/100;
+	s=c=document.getElementById('sizetext').value/10;
+	initialv=document.getElementById('startveltext').value;
+	initialr=document.getElementById('startpostext').value;
+	box=document.getElementById('boxtext').value;
+	showbox=document.getElementById('box').checked;
+	showaxes=document.getElementById('axes').checked;
+	boundary=document.getElementById('bound').checked;
+	isometric=document.getElementById('isometric').checked;
+	showW=document.getElementById('w').checked;
+	centerCamera=document.getElementById('centerCamera').checked;
+}

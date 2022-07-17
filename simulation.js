@@ -1,6 +1,5 @@
-var  dim=3; //dimensions of simulation
-var  ddim=2; //number of dimensions of display
 var  sdim=3; //number of dimensions in physical space
+var  dim=3; //dimensions of simulation
 
 var  n=800; //number of objects
 var  dark=0; //what percent of objects have no collision
@@ -18,10 +17,10 @@ var showaxes=false;
 var isometric=false;
 var showW=false;
 var centerCamera=false;
-var width=800;
-var height=800;
 var run=true;
 
+var width=800;
+var height=800;
 var mouseX=0;
 var mouseY=0;
 var pmouseX=0;
@@ -42,31 +41,13 @@ function getCoords(event){
   mouseY = event.clientY;
 }
 
-function updateSettings1(n1, dim1, g1, dark1, size, startvel, startpos, boxsize, showbox1, showaxes1, boundary1, isometric1, showW1, centerCamera1){
-  reDimension(dim1);
-  reParticle(n1);
-  g=g1;
-  dark=dark1;
-  s=size;
-  c=size;
-  initialv=startvel;
-  initialr=startpos;
-  box=boxsize;
-  showbox=showbox1;
-  showaxes=showaxes1;
-  boundary=boundary1;
-  isometric=isometric1;
-  showW=showW1;
-  centerCamera=centerCamera1;
-  //reset();
-}
-
 function project(rotations,vector){  
-  tempVec=[...vector];
-  for(let k=0;k<cdim;k++){
-    k1=(k+2)%cdim;
-    temp=Math.cos(rotations[k1])*tempVec[k1]+Math.sin(rotations[k1])*tempVec[(k1+1)%cdim];
-    temp1=-Math.sin(rotations[k1])*tempVec[k1]+Math.cos(rotations[k1])*tempVec[(k1+1)%cdim];
+  tempVec=[...vector];//copy
+  for(let k=cdim-1;k>=0;k--){
+    k1=((k-1)%cdim+cdim)%cdim;//the two axes to rotate around
+    k2=((k)%cdim+cdim)%cdim;
+    temp=Math.cos(rotations[k])*tempVec[k1]+Math.sin(rotations[k])*tempVec[(k2)%cdim];
+    temp1=-Math.sin(rotations[k])*tempVec[k1]+Math.cos(rotations[k])*tempVec[(k2)%cdim];
     tempVec[k1]=temp;
     tempVec[(k1+1)%cdim]=temp1;
   }
@@ -93,9 +74,9 @@ function reDimension(dim1){//adds/removes dimensions
     tempVec2=new Array(cdim1).fill(0);
     if (dim1>dim){//add dimensions
       for(i=0;i<n;i++){
-        for(k=cdim;k<cdim1;k++){
-          pos[i][k]=Math.random(-1,1);
-          pos1[i][k]=Math.random(-1,1)*dt;
+        for(k=dim;k<cdim1;k++){
+          pos[i][k]=Math.random()*2-1;
+          pos1[i][k]=(Math.random()*2-1)*dt;
           rotation[k]=0;
         }
       }
@@ -113,26 +94,14 @@ function reDimension(dim1){//adds/removes dimensions
         }
       }
     }
+    rotation[0]=0
     dim=dim1;
     cdim=cdim1;
   }
 }
 
 function reParticle(n1){//adds/removes particles
-  
-/*  while (n1>n){//add particles
-    mass[n]=Math.random()*100+100;
-    totalmass+=mass[n];
-    pos[n]=[];
-    pos1[n]=[];
-    for(k=0;k<dim;k++){
-      pos[n][k]=(Math.random()*2-1)*initialr;
-      pos1[n][k]=pos[n][k]-(Math.random()*2-1)*initialv*dt; 
-    }
-    n++
-  }*/
-
-  if (n1>n){//add particles
+  /*if (n1>n){//add particles
     for(i=n;i<n1;i++){
       mass[i]=Math.random()*100+100;
       totalmass+=mass[i];
@@ -143,7 +112,7 @@ function reParticle(n1){//adds/removes particles
         pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
       }
     }
-  }
+  }*/
   if (n1<n){ //remove particles
     mass.splice(n1);
     pos.splice(n1);
@@ -161,32 +130,12 @@ function reset(){
   for (i=0; i<n; i++){
     mass[i]=Math.random()*100+100;
     totalmass+=mass[i];
-    for (k=0;k<cdim;k++){
+    for (k=0;k<dim;k++){
       pos[i][k]=(Math.random()*2-1)*initialr;
       pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
     }
   }
 }
-
-document.addEventListener('keydown', function(event) {//from https://stackoverflow.com/questions/1846599/how-to-find-out-what-character-key-is-pressed
-  const key = event.key; // "a", "1", "Shift", etc.
-  if(key=='r'){
-    reset();
-  }
-  if(key=='q'){
-    ri=(ri+1)%(dim-1);
-  }
-  if(key=='a'){
-    rotation.fill(0);
-    ri=0;
-  }
-  if(key=='l'){
-    reDimension(dim+1);
-  }
-  if(key=='k'){
-    reDimension(dim-1);
-  }
-});
 
 function drawBox(dim,size){//terrible implementation but I'm tired rn
   for(i=0;i<(2**dim);i++){
@@ -210,23 +159,25 @@ function isDark(x){ //determine if a particle is dark matter
 
 const canvas = document.getElementById('sketch');
 const ctx = canvas.getContext('2d');
-ctx.lineWidth=1;
-center=new Array(cdim);
-w=new Array(3); //only relevant in 3- dimensions
-rotation=new Array(cdim).fill(0); //this isn't enough for any rotation we could want (that would take dim*(dim-1) floats), but it's enough for our tiny 3d minds to be satisfied.
-  //it also means that you can get gimbal lock, but I'm not dealing with quaternions/octonians etc. to do n dimentional rotations the right way. This was supposed to be a quick add-on, not an overhaul.
-tempVec=new Array(cdim);
-tempVec1=new Array(cdim);
-tempVec2=new Array(cdim);
-totalmass=0;
-for (i=0; i<n; i++){
-  mass[i]=Math.random()*100+100;
-  totalmass+=mass[i];
-  pos[i]=[];
-  pos1[i]=[];
-  for (k=0;k<cdim;k++){
-    pos[i][k]=(Math.random()*2-1)*initialr;
-    pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
+function start(){
+  ctx.lineWidth=1;
+  center=new Array(cdim);
+  w=new Array(3); //only relevant in 3- dimensions
+  rotation=new Array(cdim).fill(0); //this isn't enough for any rotation we could want (that would take dim*(dim-1) floats), but it's enough for our tiny 3d minds to be satisfied.
+    //it also means that you can get gimbal lock, but I'm not dealing with quaternions/octonians etc. to do n dimentional rotations the right way. This was supposed to be a quick add-on, not an overhaul.
+  tempVec=new Array(cdim);
+  tempVec1=new Array(cdim);
+  tempVec2=new Array(cdim);
+  totalmass=0;
+  for (i=0; i<n; i++){
+    mass[i]=Math.random()*100+100;
+    totalmass+=mass[i];
+    pos[i]=[];
+    pos1[i]=[];
+    for (k=0;k<cdim;k++){
+      pos[i][k]=(Math.random()*2-1)*initialr;
+      pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
+    }
   }
 }
 
@@ -240,19 +191,62 @@ function draw(){
   //time=millis();
 
   rotation[ri]+=(mouseX-pmouseX)*2*Math.PI/width;
-  rotation[ri+1]+=(mouseY-pmouseY)*2*Math.PI/height;
+  rotation[(ri+1)%cdim]+=(mouseY-pmouseY)*2*Math.PI/height;
 
   for (i=0; i<n; i++){
-    for (k=0; k<dim; k++){
-      temp=pos[i][k];
-      pos[i][k]+=(pos[i][k]-pos1[i][k]);
-      pos1[i][k]=temp;
-      if(boundary){
-        if(pos[i][k]>box){
-          pos[i][k]-=(pos[i][k]-box)/2;
+    if(pos[i]==undefined){
+      mass[i]=Math.random()*100+100;
+      totalmass+=mass[i];
+      pos[i]=[];
+      pos1[i]=[];
+      for(k=0;k<dim;k++){
+        pos[i][k]=(Math.random()*2-1)*initialr;
+        pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
+      }
+    }
+    if(run){
+      for (k=0; k<dim; k++){
+        temp=pos[i][k];
+        pos[i][k]+=(pos[i][k]-pos1[i][k]);
+        pos1[i][k]=temp;
+        if(boundary){
+          if(pos[i][k]>box){
+            pos[i][k]-=(pos[i][k]-box)/2;
+          }
+          if(pos[i][k]<-box){
+            pos[i][k]+=(-box-pos[i][k])/2;
+          }
         }
-        if(pos[i][k]<-box){
-          pos[i][k]+=(-box-pos[i][k])/2;
+      }
+      for (j=0; j<i; j++){
+        dsq=0;
+        for (k=0; k<dim; k++){
+          dsq+=(pos[i][k]-pos[j][k])**2;
+        }
+        if(!isDark(i) && !isDark(j)){  //if both particles are normal matter
+          d=Math.sqrt(dsq);
+          l=(mass[i]+mass[j])/40*c;
+          if(d<=l){//collisions
+            if(d==0){
+              for (k=0; k<dim; k++){
+                pos1[i][k]+=Math.random();
+                pos1[j][k]+=Math.random();
+              } 
+            }
+            else{
+              for (k=0; k<dim; k++){
+                temp=.5*(pos[i][k]-pos[j][k])/d*(l-d);
+                pos[i][k]+=temp;
+                pos[j][k]-=temp;
+              } 
+            }
+          }
+        }
+        dsq+=e**2; //softening; not ideal, but a good quick fix
+        for (k=0; k<dim; k++){
+          temp=g*mass[j]*(pos[i][k]-pos[j][k])/(dsq**(3/2.));
+          pos1[i][k]+=temp*dt*dt; //subtracting the acceleration from the last position to change the speed (implements acceleration without an acceleration variable)
+          pos1[j][k]-=temp*dt*dt;
         }
       }
     }
@@ -260,38 +254,17 @@ function draw(){
 
     if(tempVec[2]>0){
       ctx.beginPath();  //draw particle
-      ctx.arc(Math.floor(tempVec[0]/tempVec[2]+width/2),Math.floor(tempVec[1]/tempVec[2]+height/2),s*2*mass[i]/(40*tempVec[2]), 0, 2 * Math.PI);
+      ctx.arc(Math.floor(tempVec[0]/tempVec[2]+width/2),
+              Math.floor(tempVec[1]/tempVec[2]+height/2),
+              Math.abs(s*mass[i]/(40*tempVec[2])),
+              0,2 * Math.PI);
       ctx.fillStyle=(isDark(i))?"#000000":"#ffffff";
       ctx.fill();
       ctx.stroke();
     }
   }
   //console.log(pos[0]);
-  for (i=0; i<n; i++){
-    for (j=i+1; j<n; j++){
-      dsq=0;
-      for (k=0; k<dim; k++){
-        dsq+=(pos[i][k]-pos[j][k])**2;
-      }
-      if(!isDark(i) && !isDark(j)){  //if both particles are normal matter
-        d=Math.sqrt(dsq);
-        l=(mass[i]+mass[j])/40*c;
-        if(d<l && d!=0){//collisions
-          for (k=0; k<dim; k++){
-            temp=(pos[i][k]-pos[j][k])*(l-d)/d;
-            pos[i][k]+=temp/2;
-            pos[j][k]-=temp/2;
-          } 
-        }
-      }
-      dsq+=e**2; //softening; not ideal, but a good quick fix
-      for (k=0; k<dim; k++){
-        temp=g*mass[j]*(pos[i][k]-pos[j][k])/(dsq**(3/2.));
-        pos1[i][k]+=temp*dt*dt; //subtracting the acceleration from the last position to change the speed
-        pos1[j][k]-=temp*dt*dt;
-      }
-    }
-  }
+
   //box=(box+399)%400;
 
   //box
@@ -319,7 +292,7 @@ function draw(){
     w[1]=0;
     w[2]=0;
     for (i=0; i<n; i++){
-      for (k=0; k<cdim; k++){
+      for (k=0; k<3; k++){
         w[k]+=(pos[i][(k+1)%3]*(pos[i][(k+2)%3]-pos1[i][(k+2)%3])-pos[i][(k+2)%3]*(pos[i][(k+1)%3]-pos1[i][(k+1)%3]))/n;
       }
     }
