@@ -40,11 +40,6 @@ inputs.forEach(function(element){
 	});
 });
 
-function updateVisibility(show,id){
-	let obj=document.getElementById(id);
-	obj.style.display=show?"initial":"none";
-}
-
 document.addEventListener('keydown', function(event) {//from https://stackoverflow.com/questions/1846599/how-to-find-out-what-character-key-is-pressed
   const key = event.key; // "a", "1", "Shift", etc.
   if(key=='r'){

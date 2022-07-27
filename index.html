@@ -1,121 +1,152 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<style>
-
-			.row:after {
-			  content: "";
-			  display: table;
-			  clear: both;
-			}
-
-			.col{
-				float: left;
-				width: 200px;
-				height: 300px;
-				padding: 10px;
-			}
-
-			.break{
-				margin-top:25px;
-			}
-
-			p{
-				margin:0px;
-			}
-
-			p.nobr{
-				display:inline;
-			}
-
-			.small{
-				width: 3ch;
-			}
-
-
-
-		</style>
-			
-	</head>
-	<body>
-		<h1>Gravy: A Galaxy Simulation</h1>
-		<br>
-		<p> This is my attempt at a simulation of galaxy formation! the solid circles are regular matter particles, and the hollow ones are dark matter. As the matter collides, it forms a disk, while the non-colliding dark matter stays as a sphere. Interestingly, this effect doesn't occur in more than 3 dimensions, because there can be more than one mutually perpendicular plane of rotation; try changing the number of dimensions in the advanced settings...
-		<br><br> This simulation isn't very true to real life, as everything is simplified for optimization purposes, and precision errors in the collision handler tends to dump extra angular momentum into the system. Nevertheless, it looks pretty and is fun to mess with! </p>
-		
-		<div class="row">
-			<div id="not_advanced">
-				<div class="col">
-					<input type="button" class="nobr" onclick="reset()" value="Reset"/>
-					<input type="button" onclick="run=!run;this.value=(this.value=='Pause')?'Unpause':'Pause'"" value="Pause"/>
-					<br><p class="nobr"># of particles:</p>
-					<input type="text" id="ntext" value="200" class="break small" />
-					<input type="range" value="200" id="nslider" min="0" max="400" />
-					<br><p class="nobr">gravity strength:</p>
-					<input type="text" id="gtext" value="30" class="break small" />
-					<input type="range" value="30" id="gslider" min="-10" max="100" />
-					<br><p class="nobr">% dark matter:</p>
-					<input type="text" id="darktext" value="50" class="break small"/>
-					<input type="range" value="50" id="darkslider" min="0" max="100" />
-					<br><p class="nobr">box size:</p>
-					<input type="text" id="boxtext" value="400" class="break small"/>
-					<input type="range" value="400" id="boxslider" min="0" max="400" />
-				</div>
-				<div class="col">
-					<p>show bounding box</p>
-					<input type="checkbox" id="box" checked/>
-					<p class="break">bound particles</p>
-					<input type="checkbox" id="bound" checked/>
-					<p class="break">show axes</p>
-					<input type="checkbox" id="axes"/>
-					<p class="break">show angular momentum</p>
-					<input type="checkbox" id="w"/>
-					<p class="break">center camera</p>
-					<input type="checkbox" id="centerCamera"/>
-				</div>
-			</div>
-			<div id="advanced" style="display: none">
-				<div class="col">
-					<p class="nobr">particle size:</p>
-					<input type="text" id="sizetext" value="15" class="small"/>
-					<input type="range" value="15" id="sizeslider" min="0" max="100" />
-					<br><p class="nobr">initial velocity:</p>
-					<input type="text" id="startveltext" value="3" class="break small"/>
-					<input type="range" value="3" id="startvelslider" min="0" max="40" />
-					<br><p class="nobr">initial radius:</p>
-					<input type="text" id="startpostext" value="400" class="break small"/>
-					<input type="range" value="400" id="startposslider" min="0" max="400" />
-					<p class="break">isometric</p>
-					<input type="checkbox" id="isometric"/>
-				</div>
-				<div class="col">
-					<p class="nobr"># of dimensions:</p>
-					<input type="number" value="3" id="dimensions" min="0" step="1"/>
-					<br><br>
-					<p>Press 'Q' to change the rotation axes <br> (try this in 4+ dimensions!)</p>
-					<br>
-					<p>Press 'A' to reset the rotation</p>
-				</div>
-			</div>
-			<div class="col">
-				<canvas id="sketch" width="800" height="800" onmousemove="getCoords(event)"></canvas>
-			</div>
-		</div>
-		<p class="break">Advanced</p>
-		<input id="showAdvanced" type="checkbox" onchange="
-			updateVisibility(this.checked,'advanced');
-			updateVisibility(!this.checked,'not_advanced');"/>
-		<script src="inputHandling.js"></script>
-		<script src="simulation.js"></script>
-		<script>
-			updateVisibility(document.getElementById('showAdvanced').checked,'advanced');
-			updateVisibility(!document.getElementById('showAdvanced').checked,'not_advanced');
-			start();
-			updateSettings();
-			reset();	//hacky fix for reloading the page in >3 dimensions
-			setInterval(function(){
-			  draw();
-			}, 30);
-		</script>
-	</body>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="style.css">
+      <style>
+         .column > p{
+         margin-top: 30px;
+         }
+         .small{
+         width: 3ch;
+         }
+      </style>
+   </head>
+   <body>
+      <h1>Gravy: A Galaxy Simulation</h1>
+      <div class="row interactive pad">
+         <div class="column">
+            <canvas id="sketch" width="600" height="600" onmousemove="getCoords(event)"></canvas>
+         </div>
+         <div class="column">
+               <div id="not_advanced" class="row pad">
+                  <div class="column">
+                     <div class="row">
+                        <button onclick="reset()">Reset</button>
+                        <button onclick="run=!run;this.textContent=(this.textContent=='Pause')?'Unpause':'Pause'">Pause</button>
+                     </div>
+                     <div class="column">
+                        <div class="option">
+                        <p class="nobr"># of particles:
+                           <input type="text" id="ntext" value="200" class="break small" />
+                        </p>
+                        <input type="range" value="200" id="nslider" min="0" max="400" />
+                        </div>
+                        <div class="option">
+                        <p>gravity strength:
+                           <input type="text" id="gtext" value="30" class="break small" />
+                        </p>
+                        <input type="range" value="30" id="gslider" min="-10" max="100" />
+                        </div>
+                        <div class="option">
+                        <p class="nobr">% dark matter:
+                           <input type="text" id="darktext" value="50" class="break small"/>
+                        </p>
+                        <input type="range" value="50" id="darkslider" min="0" max="100" />
+                        </div>
+                        <div class="option">
+                        <p class="nobr">box size:
+                           <input type="text" id="boxtext" value="400" class="break small"/>
+                        </p>
+                        <input type="range" value="400" id="boxslider" min="0" max="400" />
+                        </div>
+                     </div>
+                  </div>
+                  <div class="column">
+                     <div class="option toggle">
+                     <label for="box">
+                     <p>show bounding box
+                     <input type="checkbox" id="box" checked/></p>
+                     </label>
+                        </div>
+                        <div class="option toggle">
+                     <label for="bound">
+                     <p class="break">bound particles
+                     <input type="checkbox" id="bound" checked/></p>
+                  </label>
+                        </div>
+                        <div class="option toggle">
+                     <label for="axes">
+                     <p class="break">show axes
+                     <input type="checkbox" id="axes"/></p>
+                  </label>
+                        </div>
+                        <div class="option toggle">
+                     <label for="w">
+                     <p class="break">show angular momentum
+                     <input type="checkbox" id="w"/></p>
+                  </label>
+                        </div>
+                        <div class="option toggle">
+                     <label for="centerCamera">
+                     <p class="break">center camera
+                     <input type="checkbox" id="centerCamera"/></p>
+                  </label>
+                        </div>
+                        <div class="option toggle">
+                     <label for="isometric">
+                     <p>isometric
+                     <input type="checkbox" id="isometric"/></p>
+                  </label>
+                        </div>
+                  </div>
+               </div>
+               <div id="advanced" class="row pad" style="border-top: 1px solid #808080;">
+                  <div class="dropdown column">
+                     <label for="showAdvanced" class="toggle">
+                     <p>Advanced
+                   <input id="showAdvanced" type="checkbox"/></p>
+                  </label>
+                  <div class="options row">
+                  <div class="column">
+                        <div class="option">
+                     <p>particle size:
+                        <input type="text" id="sizetext" value="15" class="small"/>
+                     </p>
+                     <input type="range" value="15" id="sizeslider" min="0" max="100" />
+                        </div>
+                        <div class="option">
+                     <p >initial velocity:
+                        <input type="text" id="startveltext" value="3" class="break small"/>
+                     </p>
+                     <input type="range" value="3" id="startvelslider" min="0" max="40" />
+                        </div>
+                        <div class="option">
+                     <p>initial radius:
+                        <input type="text" id="startpostext" value="400" class="break small"/>
+                     </p>
+                     <input type="range" value="400" id="startposslider" min="0" max="400" />
+                        </div>
+                  </div>
+                  <div class="column">
+                        <div class="option">
+                     <p class="nobr"># of dimensions:</p>
+                     <input type="number" value="3" id="dimensions" min="0" step="1"/>
+                        </div>
+                     <br><br>
+                     <p>Press 'Q' to change the rotation axes <br> (try this in 4+ dimensions!)</p>
+                     <br>
+                     <p>Press 'A' to reset the rotation</p>
+                  </div>
+               </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <h2>What is this?</h2>
+      <p> This is my attempt at a simulation of galaxy formation! the solid circles are regular matter particles, and the hollow ones are dark matter. As the matter collides, it forms a disk, while the non-colliding dark matter stays as a sphere. Interestingly, this effect doesn't occur in more than 3 dimensions, because there can be more than one mutually perpendicular plane of rotation; try changing the number of dimensions in the advanced settings...
+         <br><br> This simulation isn't very true to real life, as everything is simplified for optimization purposes, and precision errors in the collision handler tends to dump extra angular momentum into the system. Nevertheless, it looks pretty and is fun to mess with! 
+      </p>
+      <script src="inputHandling.js"></script>
+      <script src="simulation.js"></script>
+      <script src="guiHandling.js"></script>
+      <script>
+         start();
+         updateSettings();
+         reset(); //hacky fix for reloading the page in >3 dimensions
+         setInterval(function(){
+           draw();
+         }, 30);
+      </script>
+   </body>
 </html>

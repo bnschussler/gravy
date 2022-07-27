@@ -19,8 +19,6 @@ var showW=false;
 var centerCamera=false;
 var run=true;
 
-var width=800;
-var height=800;
 var mouseX=0;
 var mouseY=0;
 var pmouseX=0;
@@ -51,7 +49,7 @@ function project(rotations,vector){
     tempVec[k1]=temp;
     tempVec[(k1+1)%cdim]=temp1;
   }
-  tempVec[2]=isometric?1:(tempVec[2]+1200)/800; //camera angle
+  tempVec[2]=isometric?1:(tempVec[2]+1200)/Math.max(width,height); //camera angle
   return tempVec;
 }
 
@@ -138,6 +136,7 @@ function reset(){
 }
 
 function drawBox(dim,size){//terrible implementation but I'm tired rn
+  if(dim<=9){ //this is to protect the computer from drawing too many lines when rendering the box in higher dimensions. Remove it if you have faith in your computer :)
   for(i=0;i<(2**dim);i++){
     for(k=0;k<dim;k++){
       tempVec1[k]=size*(2*((i>>k)&1)-1);
@@ -149,6 +148,7 @@ function drawBox(dim,size){//terrible implementation but I'm tired rn
       tempVec2[k]=tempVec1[k];
     }
   }
+  }
 }
 
 function isDark(x){ //determine if a particle is dark matter
@@ -158,6 +158,8 @@ function isDark(x){ //determine if a particle is dark matter
 }
 
 const canvas = document.getElementById('sketch');
+width=canvas.width;
+height=canvas.height;
 const ctx = canvas.getContext('2d');
 function start(){
   ctx.lineWidth=1;
@@ -197,11 +199,15 @@ function draw(){
     if(pos[i]==undefined){
       mass[i]=Math.random()*100+100;
       totalmass+=mass[i];
-      pos[i]=[];
-      pos1[i]=[];
-      for(k=0;k<dim;k++){
+      pos[i]=new Array(cdim).fill(0);
+      pos1[i]=new Array(cdim).fill(0);
+      for(let k=0;k<dim;k++){
         pos[i][k]=(Math.random()*2-1)*initialr;
         pos1[i][k]=pos[i][k]-(Math.random()*2-1)*initialv*dt;
+      }
+      for(let k=dim;k<cdim;k++){
+        pos[i][k]=0;
+        pos1[i][k]=pos[i][k];
       }
     }
     if(run){
@@ -272,9 +278,15 @@ function draw(){
     drawBox(dim,box);
   }//centering camera
   if(centerCamera){
-    center[0]=0;
-    center[1]=0;
-    center[2]=0;
+    if(totalmass!=totalmass){
+      totalmass=0;
+      for (i=0; i<n; i++){
+        totalmass+=mass[i];
+      }
+    }
+    for (k=0; k<dim; k++){
+      center[k]=0;
+    }
     for (i=0; i<n; i++){
       for (k=0; k<dim; k++){
         center[k]+=Math.min(Math.max(pos[i][k],-800),800)*mass[i]/totalmass;//we constrain so free particles don't skew the average
