@@ -18,6 +18,11 @@ Array.from(document.getElementsByClassName('toggle')).forEach(toggle => {
   });
 });
 
+canvas.addEventListener("touchstart",  function(event){event.preventDefault()})
+canvas.addEventListener("touchmove",  function(event){event.preventDefault()})
+canvas.addEventListener("touchend",  function(event){event.preventDefault()})
+canvas.addEventListener("touchcancel",  function(event){event.preventDefault()})
+
 /*window.addEventListener('resize', function handle(event){
   Array.from(document.querySelectorAll('.interactive')).forEach(interactive =>{
     interactive.style.maxWidth="auto";
