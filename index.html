@@ -16,7 +16,7 @@
       <h1>Gravy: A Galaxy Simulation</h1>
       <div class="row interactive pad">
          <div class="column">
-            <canvas id="sketch" width="600" height="600" onmousemove="getCoords(event)" ontouchmove="getCoords(event)"></canvas>
+            <canvas id="sketch" width="600" height="600" onmousemove="getCoords(event)" ontouchmove="getCoords(event.touches[0])"></canvas>
          </div>
          <div class="column">
                <div id="not_advanced" class="row pad">
